@@ -121,8 +121,32 @@
     # List of all files packaged with this module
     FileList          = ''
 
-    # Private data to pass to the module specified in RootModule/ModuleToProcess
-    # PrivateData = ''
+    # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
+    PrivateData       = @{
+
+        PSData = @{
+
+            # Tags applied to this module. These help with module discovery in online galleries.
+            Tags       = 'OLEDB', 'ODBC', 'dBase', 'FoxPro', 'Excel'
+
+            # A URL to the license for this module.
+            LicenseUri = 'https://raw.githubusercontent.com/AshdarPartners/LegacyData/master/LICENSE'
+
+            # A URL to the main website for this project.
+            ProjectUri = 'https://github.com/AshdarPartners/LegacyData'
+
+            # A URL to an icon representing this module.
+            # IconUri = ''
+
+            # ReleaseNotes of this module
+            # ReleaseNotes = ''
+
+            # External dependent modules of this module
+            # ExternalModuleDependencies = ''
+
+        } # End of PSData hashtable
+    
+    } # End of PrivateData hashtable
 
     # HelpInfo URI of this module
     # HelpInfoURI = ''
