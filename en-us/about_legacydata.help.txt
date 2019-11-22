@@ -1,0 +1,15 @@
+This module contains functions that provide simple functions written for ODBC, 
+ADO and OLEDB. OLEDB is the best supported. 
+
+ADO still lurks around because it is not worth removing it.
+
+In the tests that I have run, OLEDB is more efficient than the ADO driver.
+
+You can use these to interact with databases that provide a suitable driver. These 
+functions have seen action against FoxPro, dBase and Excel files.
+
+The main difference between FoxPro and dBase is that the FoxPro functions use 
+the Visual Fox Pro OLEDB driver, which is 32 bits only, and the dBase functions
+use ACE, which comes in 32 bit and 64 bit distributions. There is a good chance
+that the dBase functions will work perfectly on FoxPro-flavored dBase files, but
+there has not been extensive testing.
