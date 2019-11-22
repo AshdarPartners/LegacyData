@@ -22,6 +22,7 @@ else {
     $script:SqlInstance = "localhost\sql2019"
     #    $script:appveyorlabrepo = "C:\github\appveyor-lab"
     # $instances = @($script:instance1, $script:instance2)
+    $script:FoxProDbPath = Join-Path -path ($env:temp) -Child "FoxProDbPath"
 }
 
 if ($env:appveyor) {
