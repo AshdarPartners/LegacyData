@@ -11,18 +11,18 @@ http://www.yaldex.com/fox_pro_tutorial/html/7d2d6409-f972-4452-9c6d-91ac5c9a2a5e
 Talks about ANSI
 #>
 
-param (
-    # have to put the files somewhere. Normally, I map temp: to %TEMP%
-    $FoxProDbPath = (Get-PSDrive 'temp').Root
-)
+$ConstantsFile = Join-Path -Path (Split-Path $PSScriptRoot) -childpath "Tests\constants.ps1"
+. $ConstantsFile 
+
+Write-Verbose -Verbose -Message "FoxPro Db Path: $script:FoxProDbPath"
 
 # clean up from last time
-Get-ChildItem -path $FoxProDbPath -Filter foo.* | Remove-Item
+Get-ChildItem -path $script:FoxProDbPath -Filter foo.* | Remove-Item
 
 
 try {
 
-    $cn = Get-FoxProConnection -DataSource $FoxProDbPath
+    $cn = Get-FoxProConnection -DataSource $script:FoxProDbPath
 
     # This creates a test table
     # this is "reference" vs. "difference"
@@ -96,4 +96,4 @@ Finally {
 }
 
 # clean up
-Get-ChildItem -path $FoxProDbPath -Filter presdent.* | Remove-Item
+Get-ChildItem -path $script:FoxProDbPath -Filter presdent.* | Remove-Item

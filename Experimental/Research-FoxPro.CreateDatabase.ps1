@@ -3,14 +3,12 @@
 This is not a property .tests. Pester file, I am still researching how to build a FoxPro db and testing mah stuhf.
 #>
 
-param (
-    # have to put the files somewhere. Normally, I map temp: to %TEMP%
-    $FoxProDbPath = (Get-PSDrive 'temp').Root
-)
-# fixme: this hard-coded path is a bad idea, we need to determine the path from the environment at run time.
-Import-Module -force  repo:\Ashdar\LegacyData\LegacyData.psd1
+$ConstantsFile = Join-Path -Path (Split-Path $PSScriptRoot) -childpath "Tests\constants.ps1"
+. $ConstantsFile 
 
-Get-ChildItem -path temp: -Filter *.dbf | Remove-Item -Verbose
+Write-Verbose -Verbose -Message "FoxPro Db Path: $script:FoxProDbPath"
+
+Get-ChildItem -path $script:FoxProDbPath -Filter *.dbf | Remove-Item -Verbose
 try {
     $cn = Get-FoxProConnection -datasource $FoxProDbPath
 
@@ -24,15 +22,15 @@ try {
     # Error: "Feature is not supported for non-.DBC tables." 
     # That means that PK needs Visual FoxPro "databases", not just FoxPro (for DOS) "loose tables"
     Write-Verbose -verbose -Message "creating table"
-    Invoke-FoxProQuery -As 'NonQuery' -Query "create table dept (deptid int NOT NULL) " -datasource $FoxProDbPath
+    Invoke-FoxProQuery -As 'NonQuery' -Query "create table dept (deptid int NOT NULL) " -datasource $script:FoxProDbPath
 
     # Get-FoxProColumnMetaData -Datasource $FoxProDbPath -TableName $tablename
     Write-Verbose -verbose -Message "insert some data"
     for ($i = 1; $i -lt 10; $i++) {
-        Invoke-FoxProQuery -As 'NonQuery' -Query "insert into dept (deptid) values ($i) " -datasource $FoxProDbPath
+        Invoke-FoxProQuery -As 'NonQuery' -Query "insert into dept (deptid) values ($i) " -datasource $script:FoxProDbPath
     }
     #Invoke-FoxProQuery -Query "select * from dept " -Connection $cn
-    Write-Verbose -verbose -Message "Inserted $i ROW(S)"
+    Write-Verbose -verbose -Message "Inserted $i Row(s)"
 
     # that gives us sometjhing test with.
 
@@ -64,7 +62,9 @@ try {
 }
 
 finally {
-    $cn.Close()
-    $cn.Dispose()
+    if ($cn) {
+        $cn.Close()
+        $cn.Dispose()
+    }
 
 }

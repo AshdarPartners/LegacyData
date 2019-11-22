@@ -16,10 +16,11 @@ between deleted rows and non-deleted rows by using the IsDeleted() function.
 FoxPro and dBase work the same way, in this respect.
 
 #>
-param (
-    # have to put the files somewhere. Normally, I map temp: to %TEMP%
-    $FoxProDbPath = (Get-PSDrive 'temp').Root
-)
+
+$ConstantsFile = Join-Path -Path (Split-Path $PSScriptRoot) -childpath "Tests\constants.ps1"
+. $ConstantsFile 
+
+Write-Verbose -Verbose -Message "FoxPro Db Path: $script:FoxProDbPath"
 
 # clean up from last time
 Get-ChildItem -path $FoxProDbPath -Filter presdent.* | Remove-Item
