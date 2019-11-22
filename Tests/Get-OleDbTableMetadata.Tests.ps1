@@ -1,25 +1,23 @@
-param (
-    #fixme: hard-coded param is bad practice
-    $DataSource = ".\sql2012"
-)
-$ModuleName = $MyInvocation.MyCommand.Name.Replace(".Tests.ps1", "")
+. "$PSScriptRoot\constants.ps1"
+
+$CommandName = $MyInvocation.MyCommand.Name.Replace(".Tests.ps1", "")
 
 $Path = $(Split-Path -Parent -path (Split-Path -Parent -Path $MyInvocation.MyCommand.Definition))
 $ManifestFile = (Get-ChildItem  -Path $Path -Filter "*.psd1").FullName
 Import-Module $ManifestFile -DisableNameChecking -Force
 $Provider = 'sqloledb'
-Describe "Get-OleDbTableMetadata with -datasource to '$DataSource'"  -Tag $ModuleName, DataSource, OLEDB {
+Describe "Get-OleDbTableMetadata with -datasource to '$script:SqlInstance'"  -Tag $CommandName, DataSource, OLEDB {
 
-    $Report = Get-OleDbTableMetadata -TableCatalog 'master' -DataSource $DataSource -Provider $Provider -ExtendedProperties "Trusted_Connection=Yes"
+    $Report = Get-OleDbTableMetadata -TableCatalog 'master' -DataSource $script:SqlInstance -Provider $Provider -ExtendedProperties "Trusted_Connection=Yes"
 
     It "should return a result set" {
         $Report |
             Should -Not -BeNullOrEmpty
     }
 }
-Describe "Get-OleDbTableMetadata with -ConnectionString to '$DataSource'" -Tag $ModuleName, ConnectionString, OLEDB {
+Describe "Get-OleDbTableMetadata with -ConnectionString to '$script:SqlInstance'" -Tag $CommandName, ConnectionString, OLEDB {
     $builder = New-Object System.Data.OleDb.OleDbConnectionStringBuilder
-    $builder."Data Source" = $DataSource
+    $builder."Data Source" = $script:SqlInstance
     $builder."Provider" = $Provider
     $builder."Trusted_Connection" = "Yes"
 
@@ -31,9 +29,9 @@ Describe "Get-OleDbTableMetadata with -ConnectionString to '$DataSource'" -Tag $
     }
 }
 
-Describe "Get-OleDbTableMetadata with -Connection to '$DataSource'" -Tag $ModuleName, Connection, OLEDB {
+Describe "Get-OleDbTableMetadata with -Connection to '$script:SqlInstance'" -Tag $CommandName, Connection, OLEDB {
     $builder = New-Object System.Data.OleDb.OleDbConnectionStringBuilder
-    $builder."Data Source" = $DataSource
+    $builder."Data Source" = $script:SqlInstance
     $builder."Provider" = $Provider
     $builder."Trusted_Connection" = "Yes"
 
