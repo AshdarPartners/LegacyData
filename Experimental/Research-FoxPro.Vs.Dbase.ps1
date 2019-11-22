@@ -4,9 +4,18 @@ This is not a property .tests. Pester file, I am still researching how to build 
 
 #>
 
-Get-ChildItem *.psd1 | Import-Module -Force
+
+$ConstantsFile = Join-Path -Path (Split-Path $PSScriptRoot) -childpath "Tests\constants.ps1"
+. $ConstantsFile 
+
+Write-Verbose -Verbose -Message "FoxPro Db Path: $script:FoxProDbPath"
+
 #$Path = 'c:\temp\foxprotest'
 $Path = 'C:\Program Files (x86)\Microsoft Visual FoxPro OLE DB Provider\Samples\Northwind'
+
+if (-not (Test-Path $Path )) {
+    throw "This script assumes that the 'Northwind' sample database was installed. (This is part of the FoxPro OLEDB driver installation package.)"
+}
 
 # if a folder has no dbc files, which define a foxpro database, it is just  "free tables".
 # there is a DBC for the Northwind example VFPOLEDB database, though
@@ -28,8 +37,10 @@ $Path = 'C:\Program Files (x86)\Microsoft Visual FoxPro OLE DB Provider\Samples\
 
 $TableName = 'employees'
 # both of these work against the VFPOLEDB example files
-#Get-FoxProTableMetaData -Datasource $Path
+Get-FoxProTableMetaData -Datasource $Path
+Get-FoxProIndexMetaData -Datasource $Path  -TableName $TableName | Out-GridView
+
+# does dbase work here?
 #Get-DbaseTableMetaData -Datasource $Path
 #Get-DbaseTable -Datasource $Path  -TableName $TableName
 #Get-DbaseColumnMetaData -Datasource $Path  -TableName $TableName | ogv
-Get-DbaseIndexMetaData -Datasource $Path  -TableName $TableName | Out-GridView
