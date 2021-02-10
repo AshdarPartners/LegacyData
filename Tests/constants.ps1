@@ -5,7 +5,7 @@ I lifted the idea for this file from that file, as I needed to abstract away har
 #>
 
 $LocalFile = Join-Path -Path $env:TEMP -ChildPath 'constants.ps1'
-if (Test-Path C:\temp\constants.ps1) {
+if (Test-Path $LocalFile) {
     Write-Verbose "$LocalFile found."
     . $LocalFile
 }
