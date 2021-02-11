@@ -12,7 +12,7 @@
     RootModule        = 'LegacyData'
 
     # Version number of this module.
-    ModuleVersion     = '3.0.0'
+    ModuleVersion     = '3.1.0'
 
     # ID used to uniquely identify this module
     GUID              = '779f9757-c463-4737-b0f2-1c589cb97396'
@@ -24,7 +24,7 @@
     CompanyName       = 'Ashdar Partners'
 
     # Copyright statement for this module
-    Copyright         = '2010-2020, darin.strait@ashdar-partners.com, http://www.ashdar-partners.com'
+    Copyright         = '2010-2021, darin.strait@ashdar-partners.com, http://www.ashdar-partners.com'
 
     # Description of the functionality provided by this module
     Description       = 'A module of functions for Ado, OleDb, Dbase and FoxPro'
