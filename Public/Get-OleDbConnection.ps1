@@ -24,11 +24,8 @@ function Get-OleDbConnection {
     The are usually key-value pairs in the format "Prop=something;AnotherProp=SomethingElse".
     No attempt is made to validate these properties or even validate the string. The first indication of trouble is usually that the Open() call will fail.
 
-    .PARAMETER UserID
-    For databases that take a user, you can provide that here.
-
-    .PARAMETER Password
-    This is a secure string.
+    .PARAMETER Credential
+    Use alternative credentials. Accepts credential objects provided by Get-Credential.
 
     .EXAMPLE
     try {
@@ -78,12 +75,7 @@ function Get-OleDbConnection {
         [Parameter(
             ParameterSetName = 'WithDataSource'
         )]
-        [string] $UserID,
-
-        [Parameter(
-            ParameterSetName = 'WithDataSource'
-        )]
-        [Securestring] $Password
+        [System.Management.Automation.PSCredential] $Credential
     )
 
     switch ($PSCmdlet.ParameterSetName) {
@@ -94,15 +86,19 @@ function Get-OleDbConnection {
             $builder = New-Object System.Data.OleDb.OleDbConnectionStringBuilder
             $builder."Data Source" = $DataSource
             $builder."Provider" = $Provider
+            
             if ($ExtendedProperties) {
                 $builder."Extended Properties" = $ExtendedProperties
             }
-            if ($UserID) {
-                $builder."User ID" = $UserID
+            if ($Credential) {
+                $builder["Trusted_Connection"] = $false
+                $builder["User ID"] = $Credential.UserName
+                $builder["Password"] = $Credential.GetNetworkCredential().Password
             }
-            if ($Password) {
-                $builder.Password = $Password
+            else {
+                $builder["Trusted_Connection"] = $true
             }
+
             [string] $connString = $builder.ConnectionString
         }
     }

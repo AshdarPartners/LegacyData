@@ -21,11 +21,8 @@ function Get-OleDbTableMetadata {
     .PARAMETER Provider
     Which OleDB provider should be used?
 
-    .PARAMETER UserID
-    For databases that take a user, you can provide that here.
-
-    .PARAMETER Password
-    This is a secure string.
+    .PARAMETER Credential
+    Use alternative credentials. Accepts credential objects provided by Get-Credential.
 
     .PARAMETER ExtendedProperties
     What extended property values should be used by the OleDB provider?
@@ -85,12 +82,7 @@ function Get-OleDbTableMetadata {
         [Parameter(
             ParameterSetName = 'WithDataSource'
         )]
-        [string] $UserID,
-
-        [Parameter(
-            ParameterSetName = 'WithDataSource'
-        )]
-        [Securestring] $Password,
+        [System.Management.Automation.PSCredential] $Credential,
 
         $TableCatalog,
         $TableSchema,
@@ -108,7 +100,7 @@ function Get-OleDbTableMetadata {
                 $OleDbConn = Get-OleDbConnection -ConnectionString $ConnectionString
             }
             'WithDataSource' {
-                $OleDbConn = Get-OleDbConnection -DataSource $DataSource -Provider $Provider -ExtendedProperties $ExtendedProperties -UserID $UserId -Password $Password
+                $OleDbConn = Get-OleDbConnection -DataSource $DataSource -Provider $Provider -ExtendedProperties $ExtendedProperties -Credential $Credential
             }
         }
 

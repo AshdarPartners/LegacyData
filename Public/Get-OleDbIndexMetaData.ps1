@@ -12,11 +12,8 @@ function Get-OleDbIndexMetadata {
     .PARAMETER DataSource
     Which location is of interest? This is uusally some sort of server hostname or a file path.
 
-    .PARAMETER UserID
-    For databases that take a user, you can provide that here.
-
-    .PARAMETER Password
-    This is a secure string.
+    .PARAMETER Credential
+    Use alternative credentials. Accepts credential objects provided by Get-Credential.
 
     .PARAMETER Connection
     If the caller provides a "live", open connection, it will be used. The connection will not be closed.
@@ -88,12 +85,7 @@ function Get-OleDbIndexMetadata {
         [Parameter(
             ParameterSetName = 'WithDataSource'
         )]
-        [string] $UserID,
-
-        [Parameter(
-            ParameterSetName = 'WithDataSource'
-        )]
-        [Securestring] $Password,
+        [System.Management.Automation.PSCredential] $Credential,
 
         $TableCatalog,
         $TableSchema,
@@ -111,7 +103,7 @@ function Get-OleDbIndexMetadata {
                 $OleDbConn = Get-OleDbConnection -ConnectionString $ConnectionString
             }
             'WithDataSource' {
-                $OleDbConn = Get-OleDbConnection -DataSource $DataSource -Provider $Provider -ExtendedProperties $ExtendedProperties -UserID $UserId -Password $Password
+                $OleDbConn = Get-OleDbConnection -DataSource $DataSource -Provider $Provider -ExtendedProperties $ExtendedProperties -Credential $Credential
             }
         }
 

@@ -48,6 +48,9 @@
     Specifies a hashtable of parameters for parameterized SQL queries.  http://blog.codinghorror.com/give-me-parameterized-sql-or-give-me-death/
     The values should be in a hash, which is easily/invisibly cast to an IDictionary by PowerShell). See the example.
 
+    .PARAMETER Credential
+    Use alternative credentials. Accepts credential objects provided by Get-Credential.
+
     .EXAMPLE
     Invoke-OleDbQuery -provider:"vfpoledb" -DataSource:'c:\temp\ADOLoad' -query:"Select count(*) CountOf from UNIT"
     This reads a Visual Fox Pro table, which is similar to dBase, xBase, etc, using the Visual FoxPro OleDb driver.
@@ -119,7 +122,12 @@
         [ValidateSet("DataSet", "DataTable", "DataRow", "SingleValue", "NonQuery")]
         [string] $As = "DataRow",
 
-        [System.Collections.IDictionary] $SqlParameters
+        [System.Collections.IDictionary] $SqlParameters,
+
+        [Parameter(
+            ParameterSetName = 'WithDataSource'
+        )]
+        [System.Management.Automation.PSCredential] $Credential
     )
 
     <#
@@ -138,7 +146,7 @@
                 $OleDbConn = Get-OleDbConnection -ConnectionString $ConnectionString
             }
             'WithDataSource' {
-                $OleDbConn = Get-OleDbConnection -DataSource $DataSource -ExtendedProperties $ExtendedProperties -Provider $Provider
+                $OleDbConn = Get-OleDbConnection -DataSource $DataSource -ExtendedProperties $ExtendedProperties -Provider $Provider -Credential $Credential
             }
         }
 
