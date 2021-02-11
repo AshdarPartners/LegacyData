@@ -12,6 +12,16 @@ The goals are:
 # Licensing
 I believe that none of this code is encumbered. If you diagree, let me know. 
 
+# Testing Requirement
+This requires Pester 4.x, but does not support 5.x or higher. It's probably best to use something like:
+Install-Module -Name Pester -MaximumVersion 4.99.9999 
+
+If you have not installed Pester on your computer before, you may be 'stuck' with version 3.4.1. In that case, this worked for me:
+Install-Module -Name Pester -MaximumVersion 4.99.9999 -Force -SkipPublisherCheck
+
+If you are testing the type of data source that requires a credential, you'll need to create one and have it available to the environment before running the Tests scripts. The PowerShell password or secrets "vault" module/technology seems to be a few months away from being released, so you will probably need to make due with a globally-scoped $Credential of some sort. 
+
+#FIXME Need a good tactic for providing credentials for testing database managers like SqlServer. 
 
 # Recent Work
 When it comes to RDBMS, I am a SQL Server person. 
