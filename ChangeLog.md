@@ -1,30 +1,41 @@
-#Foreward:
-The LegacyData is built upon the basis of the ancient Ashdar.data module. The last official version of Ashdar.data was 2.0.3. To provide a cleaner migration, the first version of the LegacyData module will be 3.0.0 and will have a new module GUID. I am leaving the pre-3.0.0 changes here in this changelog for archaeological reasons.
+# Foreward:
+The LegacyData is built upon the basis of the ancient Ashdar.data module. 
+
+The last official version of Ashdar.data was 2.0.3. To provide a cleaner migration, the first version of the LegacyData module will be 3.0.0 and will have a new module GUID. I am leaving the pre-3.0.0 changes here in this changelog for archaeological reasons.
 
 
+# Version Information
+## FIXME: Planned for $next version
+0. functional tests for FoxPro. What did I mean by "functional"?
+0. functional tests for dBase. What did I mean by "functional"?
+0. Not everything supported -UserId and -Password, nor supports -Credential. Does this make sense for Excel, Fox and dBase?
+0. The Pester Tests do not support $Credential, propertly. They fail to pull $Credential out of $script properly, must research why.
+0. Need a better way to store Credential, server name, paths, etc without coding them in the project. 
+    The current way, which uses Constants.ps1, just seems wrong.
+    See https://www.jaapbrasser.com/quickly-and-securely-storing-your-credentials-powershell/ for a clean explanation of a classic tactic.
 
-FIXME: Planned for $next version
-0. functional tests for FoxPro
-0. functional tests for dBase
+## Implemented for 3.1.0 ($next version)
+1. Replace the old -UserId and -Password with -Credential, which is a much more modern and flexible approach.
+1. Added -Credential to Invoke-OleDbQuery, which had no existing provision for UserId and Passname.
+1. Miscellaneous bug fixes.
 
-Implemented for $next version
+## Implemented for 3.0.0
 1. Initial support for DBase, including radical rework of connection string creation.
-
 
 Everything passes through "Get-Connection" for it's access subtype: OleDb, FoxPro, Dbase.
 OleDb is pretty much done, but FoxPro and Dbase remain.
 
 
-Version 2.0.3
+## Version 2.0.3
 1. Provide output type for Get-OleDbConnection and Get-FoxProConnection.
 
-Version 2.0.2
+## Version 2.0.2
 1. Break out Get-OleDbConnection and Get-FoxProConnection.
 
-Version 2.0.1
+## Version 2.0.1
 1. Update to DbaTools 1.0.
 
-Version 2.0.0
+## Version 2.0.0
 1. Cmdlet names were confusing.
     1. "Show" wasn't the correct verb to use here, changed to the more-generic "Get".
     2. Many cmdlet names should have 'MetaData' at the end. They are retrieving data about 
@@ -32,10 +43,10 @@ Version 2.0.0
 3. "NonQuery" did nt deserve its' own function.
 4. The code now follows best practice suggestions from PSSA more closely.
 
-Version 1.1.4
+## Version 1.1.4
 1. Remove some fixme comments.
 
-Version 1.1.3
+## Version 1.1.3
 1. Some modernization of the existing "Show" cmdlets.
 2. Added Show-ADOIndex
 3. Added Show-OleDBSchema for tables, indexes and columns
@@ -47,6 +58,6 @@ Version 1.1.3
 9. Fixed a lot of cmdlet documentation.
 
 
-Version 1.1.2
+## Version 1.1.2
 This change file was not implemented when 1.1.2 was released.
 
