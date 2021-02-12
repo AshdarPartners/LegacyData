@@ -2,18 +2,28 @@
 
 $CommandName = $MyInvocation.MyCommand.Name.Replace(".Tests.ps1", "")
 
-$Path = $(Split-Path -Parent -path (Split-Path -Parent -Path $MyInvocation.MyCommand.Definition))
+# go "one up" from the Tests folder
+$Path = Split-Path -Parent -Path $PSScriptRoot
+
 $ManifestFile = (Get-ChildItem  -Path $Path -Filter "*.psd1").FullName
 Import-Module $ManifestFile -DisableNameChecking -Force
 
-$Provider = 'sqloledb'
+
+$TestConfiguration = Invoke-Expression -Command (Join-Path -Path $PSScriptRoot -ChildPath 'Get-LegacyDataTestValue.ps1')
+
+# 'User' is one of several possible users.
+$SqlLoginCredential = (Invoke-Expression -Command (Join-Path -Path $PSScriptRoot -ChildPath 'Get-LegacyDataTestCredential.ps1')).User
 
 $cp = @{
-    Provider = $Provider 
-    DataSource =$Script:SqlInstance 
-    Credential= $Script:SqlOleDbCredential 
+    Provider   = 'sqloledb' 
+    Credential = $SqlLoginCredential 
+    DataSource = $TestConfiguration.SqlOleDbHostName
+    # Invoke-OleDbQuery doesn't suport a -DatabaseName or -InitialCatalog
+    # If we wanted to specify a particular database, we'd have to stuff thisinthe Extended properties parameter.
+    # or we could cheat by using a FROM clause and a three-part name. That would only work with SqlServer.
+    # DataSource = $TestConfiguration.SqlOleDbDatabaseName
 }
-
+ 
 Describe "Get-OleDbTableMetadata with -datasource to '$($cp.DataSource)'"  -Tag $CommandName, DataSource, OLEDB {
 
     $Report = Get-OleDbTableMetadata @cp -TableCatalog 'master'

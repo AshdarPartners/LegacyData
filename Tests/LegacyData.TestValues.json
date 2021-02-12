@@ -1,0 +1,5 @@
+{
+    "Comment": "This is the official test environment, as of 2021/02/12. @dstrait",
+    "SqlOleDbHostName": "localHOst",
+    "SqlOleDbDatabaseName": "master"
+}

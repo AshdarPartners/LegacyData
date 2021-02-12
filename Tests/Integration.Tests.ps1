@@ -43,7 +43,7 @@ $PS1Functions = Get-ChildItem -path "$PS1FunctionFiles"
 
 
 
-Describe "$ModuleName Module - Testing Manifest File (.psd1)" {
+Describe "$ModuleName Module - Testing Manifest File (.psd1)" -Tag 'Integration' {
 
     Context 'Module Version' { 'Loaded Version vs Get-Command return for the module' }
     Context 'Manifest' {
@@ -74,7 +74,7 @@ Describe "$ModuleName Module - Testing Manifest File (.psd1)" {
 
 
 # Testing the Module
-Describe "$ModuleName Module - HELP" -Tags "Module" {
+Describe "$ModuleName Module - HELP" -Tags 'Module', 'Integration' {
     #$Commands = (get-command -Module ADSIPS).Name
 
     FOREACH ($c in $ExportedFunctions) {

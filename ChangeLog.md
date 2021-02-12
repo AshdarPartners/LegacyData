@@ -9,16 +9,11 @@ The last official version of Ashdar.data was 2.0.3. To provide a cleaner migrati
 0. functional tests for FoxPro. What did I mean by "functional"?
 0. functional tests for dBase. What did I mean by "functional"?
 0. Not everything supported -UserId and -Password, nor supports -Credential. Does this make sense for Excel, Fox and dBase?
-0. The Pester Tests do not support $Credential, propertly. 
-    Wierdly, the Tests file runs OK when F5 in VSC but fails at a command line with Invoke-Pester.
-    When the test fails, it seems to not pull $Credential out of $script: properly. Must research why. Scoping problem?
-0. Need a better way to store Credential, server name, paths, etc without coding them in the project. 
-    The current way, which uses Constants.ps1, just seems wrong.
-    See https://www.jaapbrasser.com/quickly-and-securely-storing-your-credentials-powershell/ for a clean explanation of a classic tactic.
 
 ## Implemented for 3.1.0 ($next version)
 1. Replace the old -UserId and -Password with -Credential, which is a much more modern and flexible approach.
-1. Added -Credential to Invoke-OleDbQuery, which had no existing provision for UserId and Passname.
+1. Added -Credential to Invoke-OleDbQuery, which had no prior provision for UserId and Passname.
+1. The tests now have a way to abstract out credential and environment-specific information.
 1. Miscellaneous bug fixes.
 
 ## Implemented for 3.0.0
