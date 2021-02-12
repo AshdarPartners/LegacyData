@@ -23,7 +23,7 @@ $cp = @{
     # DataSource = $TestConfiguration.SqlOleDbDatabaseName
 }
 
-Describe "Get-OleDbColumnMetadata with -datasource to '$($cp.DataSource)', foo->$(($cp.Credential).Username )<-foo" -Tag $CommandName, DataSource, OLEDB {
+Describe "Get-OleDbColumnMetadata with -datasource to '$($cp.DataSource)'" -Tag $CommandName, DataSource, OLEDB {
 
     # this will take a long while to bring back a lot of columns from 'master', so we will just bring back one table's worth of columns
     $Report = Get-OleDbColumnMetadata @cp -TableCatalog 'master' -TableName 'MSreplication_options'
