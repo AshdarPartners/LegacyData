@@ -1,5 +1,7 @@
 {
     "Comment": "This is the official test environment, as of 2021/02/12. @dstrait",
     "SqlOleDbHostName": "localHOst",
-    "SqlOleDbDatabaseName": "master"
+    "SqlOleDbDatabaseName": "master",
+    "DBaseNorthWindDbPath": "C:\\Program Files (x86)\\Microsoft Visual FoxPro OLE DB Provider\\Samples\\Northwind",
+    "FoxProNorthWindDbPath": "C:\\Program Files (x86)\\Microsoft Visual FoxPro OLE DB Provider\\Samples\\Northwind"
 }
