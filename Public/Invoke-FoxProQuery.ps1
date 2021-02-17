@@ -47,7 +47,7 @@ function Invoke-FoxProQuery {
     Invoke-FoxProQuery -Query "Select top (1) * From dept order by deptid" -datasource "c:\fpdata"
 
     .EXAMPLE
-    Invoke-FoxProQuery -Query "Select * From dept where deptid = '1243'" -datasource "c:\fpdata"
+    Invoke-FoxProQuery -Query "Select * From dept where deptid = '1234'" -datasource "c:\fpdata"
 
     .EXAMPLE
     Invoke-FoxProQuery -Query "create table dept (deptid int) " -datasource "c:\temp" -As 'NonQuery'
