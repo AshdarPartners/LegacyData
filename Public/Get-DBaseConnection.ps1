@@ -4,8 +4,25 @@ function Get-DbaseConnection {
     Returns an OleDB connection to a DBase database
 
     .DESCRIPTION
-    Returns an OleDB connection to a DBase database
+    Returns an OleDB connection to a DBase database. 
+    
+    This *seems* to work for FoxPro as well, but there has not been extenstive testing.
+
     www.connectionstrings.com is an excellent resource for connection strings for specfic drivers.
+
+    .NOTES
+    This cmdlet uses "ACE", which is available for 32 bit and 64 bit versions of Windows. It is freely downloadable from 
+    Microsoft's site. Installing both, side-by-side, seems to be difficult/impossible. Google for details.
+
+    AFAIK, this cmdlet will work with FoxPro data, up to and including Visual Fox Pro 9.0, in a perfectly acceptable manner. 
+    
+    I believe, but have not thoroughly tested, that simple read/write access in a single-user environment would be OK.
+    
+    If you have trouble using this cmdlet with FoxPro data, try the *-FoxPro* cmdlets in this module.
+
+    Back in the 1990s, many dBase and (non-Visual) FoxPro applications got into trouble becuase file caching was a new feature
+    that was implemented in the networking layer of Windows workstations and file caching was common on Windows file servers. This 
+    is a ++ likely source of trouble in your applications.
 
     .OUTPUTS
     [System.Data.OleDb.OleDbConnection]
@@ -21,8 +38,7 @@ function Get-DbaseConnection {
 
     .EXAMPLE
     $cn = Get-DbaseConnection -DataSource (get-psdrive temp).root
-    $cn = Get-DbaseConnection -DataSource  (join-path -path ((get-psdrive repo).root) -child 'ems\testdata\fox\ems\000'
-    Invoke-DbaseQuery -Connect $cn -query 'select * from mstrlst'
+    Invoke-DbaseQuery -Connect $cn -query 'select * from nrthwind'
     $cn.close()
     $cn.dispose()
     $cn = $null
@@ -46,7 +62,9 @@ function Get-DbaseConnection {
     [OutputType([System.Data.OleDb.OleDbConnection])]
     param (
         [Parameter(Mandatory = $true)]
-        [string] $DataSource
+        [string] $DataSource,
+        [System.Management.Automation.PSCredential] $Credential
+
     )
 
     # Jet and ACE strings. Jet was 32 bit only, ACE has 32 bit and 64 bit builds.
@@ -63,13 +81,27 @@ function Get-DbaseConnection {
     # claime to be version 15.0.4873.1000
     # [string] $Provider = 'Microsoft.ACE.OLEDB.12.0'
     # [string] $Provider = 'Microsoft.ACE.OLEDB.15.0'
+
+    # How do I know which version of the provider to use? Can't I just say "use ACE" and let the system find the best version? 
+    [string] $Provider = 'Microsoft.ACE.OLEDB.12.0'
     [string] $Provider = 'Microsoft.ACE.OLEDB.16.0'
-    [string] $UserID = "Admin"
-    [string] $ExtendedProperties = "dBASE IV"
-    Try {
-        Get-OleDbConnection -DataSource $DataSource -Provider $Provider -UserID $UserID -ExtendedProperties $ExtendedProperties
+
+    [string] $ExtendedProperties = 'dBASE IV;'
+
+    if (-not $Credential) {
+        # I found the ToCharArray() and AppendChar() magic here:
+        # https://stackoverflow.com/questions/6239647/using-powershell-credentials-without-being-prompted-for-a-password
+        # IIRC, every dBase or FoxPro file I've ever accessed were protected only by file ACLs and used credentials like such:
+        $username = "Admin"
+        $password = ""
+        $secstr = New-Object -TypeName System.Security.SecureString
+        $password.ToCharArray() | ForEach-Object { $secstr.AppendChar($_) }
+        $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $username, $secstr
     }
 
+    Try {
+        Get-OleDbConnection -DataSource $DataSource -Provider $Provider -ExtendedProperties $ExtendedProperties -Credential $Credential
+    }
     Catch {
         Throw
     }
