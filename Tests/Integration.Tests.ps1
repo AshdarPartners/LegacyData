@@ -117,16 +117,17 @@ Describe "$ModuleName Module - HELP" -Tags 'Module', 'Integration' {
             }
 
             # Parameters separated by a space
+            # FIXME: This does not find the last parameter in the functions' parameter list 
+            # becuase it looks for a trailing ','. 
             $ParamText = $ast.ParamBlock.extent.text -split '\r\n' # split on return
             $ParamText = $ParamText.trim()
             $ParamTextSeparator = $ParamText | Select-String ',$' #line that finish by a ','
 
             if ($ParamTextSeparator) {
-                Foreach ($ParamLine in $ParamTextSeparator.linenumber) {
-                    It "Parameter - Separated by space (Line $ParamLine)" {
-                        Set-ItResult -Skipped -Because 'some of these cmdlets to not provide types for their parameters'
-                        #$ParamText[$ParamLine] -match '\s+' | Should Be $true
-                        $ParamText[$ParamLine] -match '^$|\s+' | Should Be $true
+                Foreach ($ParamLine in $ParamTextSeparator) {
+                    It "Parameter - Variable and data type separated by space (Line $ParamLine)" {
+                        $ParamLine -match '\s+' | Should Be $true
+                        $ParamLine -match '^$|\s+' | Should Be $true
                     }
                 }
             }
