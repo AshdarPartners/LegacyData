@@ -1,5 +1,3 @@
-. "$PSScriptRoot\constants.ps1"
-
 $CommandName = $MyInvocation.MyCommand.Name.Replace(".Tests.ps1", "")
 
 # go "one up" from the Tests folder
