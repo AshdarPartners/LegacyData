@@ -5,10 +5,10 @@ This is not a property .tests. Pester file, I am still researching how to build 
 #>
 
 
-$ConstantsFile = Join-Path -Path (Split-Path $PSScriptRoot) -childpath "Tests\constants.ps1"
-. $ConstantsFile 
+# $ConstantsFile = Join-Path -Path (Split-Path $PSScriptRoot) -childpath "Tests\constants.ps1"
+# . $ConstantsFile 
 
-Write-Verbose -Verbose -Message "FoxPro Db Path: $script:FoxProDbPath"
+# Write-Verbose -Verbose -Message "FoxPro Db Path: $script:FoxProDbPath"
 
 #$Path = 'c:\temp\foxprotest'
 $Path = 'C:\Program Files (x86)\Microsoft Visual FoxPro OLE DB Provider\Samples\Northwind'
