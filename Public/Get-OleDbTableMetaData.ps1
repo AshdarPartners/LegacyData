@@ -84,10 +84,10 @@ function Get-OleDbTableMetadata {
         )]
         [System.Management.Automation.PSCredential] $Credential,
 
-        $TableCatalog,
-        $TableSchema,
-        $TableName,
-        $Type
+        [string] $TableCatalog,
+        [string] $TableSchema,
+        [string] $TableName,
+        [string] $Type
     )
 
 

@@ -31,8 +31,8 @@ function Get-DbaseIndexMetaData {
     param (
         [Parameter(Mandatory = $True, ValueFromPipeline = $True, ValueFromPipelinebyPropertyName = $True)]
         [string] $Datasource,
-        $TableName,
-        $IndexName
+        [string] $TableName,
+        [string] $IndexName
     )
 
     try {

@@ -82,9 +82,9 @@ function Get-OleDbColumnMetadata {
         )]
         [System.Management.Automation.PSCredential] $Credential,
 
-        $TableCatalog,
-        $TableSchema,
-        $TableName
+        [string] $TableCatalog,
+        [string] $TableSchema,
+        [string] $TableName
     )
 
     Try {

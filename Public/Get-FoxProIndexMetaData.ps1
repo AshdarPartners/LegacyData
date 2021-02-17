@@ -37,8 +37,8 @@ function Get-FoxProIndexMetaData {
     param (
         [Parameter(Mandatory = $True, ValueFromPipeline = $True, ValueFromPipelinebyPropertyName = $True)]
         [string] $Datasource,
-        $TableName,
-        $IndexName
+        [string] $TableName,
+        [string] $IndexName
     )
     try {
         $cn = Get-FoxProConnection -DataSource $Datasource

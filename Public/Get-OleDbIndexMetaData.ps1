@@ -87,11 +87,11 @@ function Get-OleDbIndexMetadata {
         )]
         [System.Management.Automation.PSCredential] $Credential,
 
-        $TableCatalog,
-        $TableSchema,
-        $IndexName,
-        $Type,
-        $TableName
+        [string] $TableCatalog,
+        [string] $TableSchema,
+        [string] $IndexName,
+        [string] $Type,
+        [string] $TableName
     )
 
     Try {

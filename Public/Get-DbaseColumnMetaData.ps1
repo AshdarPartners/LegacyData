@@ -33,8 +33,8 @@ function Get-DbaseColumnMetaData {
     param (
         [Parameter(Mandatory = $True, ValueFromPipeline = $True, ValueFromPipelinebyPropertyName = $True)]
         [string] $Datasource,
-        $TableName,
-        $ColumnName
+        [string] $TableName,
+        [string] $ColumnName
     )
 
     try {
