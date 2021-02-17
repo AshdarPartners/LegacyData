@@ -1,5 +1,4 @@
 #Require -Version 5.0
-using namespace System.Data.OleDb
 
 function Get-OleDbIndexMetadata {
     <#
@@ -87,11 +86,11 @@ function Get-OleDbIndexMetadata {
         )]
         [System.Management.Automation.PSCredential] $Credential,
 
-        [string] $TableCatalog,
-        [string] $TableSchema,
-        [string] $IndexName,
-        [string] $Type,
-        [string] $TableName
+        $TableCatalog,
+        $TableSchema,
+        $IndexName,
+        $Type,
+        $TableName
     )
 
     Try {
@@ -109,6 +108,9 @@ function Get-OleDbIndexMetadata {
 
         # Doc for parameters for GetOleDbSchemaTable call:
         # https://social.msdn.microsoft.com/Forums/en-US/75fb3085-bc3d-427c-9257-30631235c3af/getoledbschematableoledboledbschemaguidindexes-how-to-access-included-columns-on-index?forum=vblanguage
+        # becuase of the way thatis call works, the four parameters here can't be declared as [string] in PowerShell. 
+        # It seems to have to do with the nullability of the variables. There seems to be a difference between:
+        # [string], [nullable][string] and <no datatype declaration>.
         $OleDbConn.GetOleDbSchemaTable([OleDbSchemaGuid]::Indexes, ($TableCatalog, $TableSchema, $IndexName, $Type, $TableName)) |
             Select-Object @{n = "TableCatalog"; e = { $_.TABLE_CATALOG } },
             @{n = "TableSchema"; e = { $_.TABLE_SCHEMA } },
