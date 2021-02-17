@@ -14,15 +14,17 @@ function Get-DbaseConnection {
     This cmdlet uses "ACE", which is available for 32 bit and 64 bit versions of Windows. It is freely downloadable from 
     Microsoft's site. Installing both, side-by-side, seems to be difficult/impossible. Google for details.
 
-    AFAIK, this cmdlet will work with FoxPro data, up to and including Visual Fox Pro 9.0, in a perfectly acceptable manner. 
+    AFAIK, this cmdlet will work with FoxPro data for reads and writes, up to and including Visual Fox Pro 9.0, in a perfectly 
+    acceptable manner. I have not thoroughly tested this. 
     
-    I believe, but have not thoroughly tested, that simple read/write access in a single-user environment would be OK.
-    
-    If you have trouble using this cmdlet with FoxPro data, try the *-FoxPro* cmdlets in this module.
+    If you have trouble using this cmdlet with FoxPro data, try the *-FoxPro* cmdlets in this module. They use Vfpoledb, which has
+    it's own quirks and features, but should work better.
 
-    Back in the 1990s, many dBase and (non-Visual) FoxPro applications got into trouble becuase file caching was a new feature
-    that was implemented in the networking layer of Windows workstations and file caching was common on Windows file servers. This 
-    is a ++ likely source of trouble in your applications.
+    Back in the 1990s, many dBase and (non-Visual) FoxPro applications got into trouble because file caching was a new feature
+    that was implemented in the networking layer of Windows workstations and file caching was common on Windows file servers. Dbase
+    doesn't understand file caching. It can't open files in write-through mode. This can lead to issues where different workstations
+    try to update the same records in the wrong order, try to insert records into the same "empty" spot at the end of the file and
+    so forath. This is a ++ likely source of trouble in your applications.
 
     .OUTPUTS
     [System.Data.OleDb.OleDbConnection]
