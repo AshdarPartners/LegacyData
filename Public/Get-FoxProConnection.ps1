@@ -16,7 +16,8 @@ function Get-FoxProConnection {
     2. Transactions
     3. The "Rushmore" index technology
     4. foreign keys
-    5. And so forth
+    5. Create table statements
+    6. And so forth
 
     Vfpoledb has two major issues:
     
@@ -33,13 +34,15 @@ function Get-FoxProConnection {
 
     Also AFAIK, the "modern" (IOW "still maintained") ACE drivers provide most functionality that an app wants for simple 
     read/write of FoxPro data. You just need to use using the "dBASE IV" flavor of the driver. I don't know if they support all 
-    of the advanced features that were only in Visual FoxPro (like .dbc files and Rushmore)
+    of the advanced features that were only in Visual FoxPro (like .dbc files and Rushmore). 
     
-    Is it possible that using ACE instead of VFPOLEB nmeans that some features are not available? Yes. I don't have a way of 
+    Is it possible that using ACE instead of VFPOLEB means that some features are not available? Yes. I don't have a way of 
     validating every possible VFP 9.0 command against the ACE driver. OTOH, if Microsoft already had workable FoxPro drivers 
     from VFP 9.0, I expect that they would have tried their best to simply reuse that code when they built ACE.
 
-    If you want to use ACE, simply use the *-dBAse* cmdlets in this module and make sure you *test*. It's pretty easy to switch 
+    I do know that CREATE TABLE statements that I tried do not work in the ACE drivers.
+
+    If you want to use ACE, simply use the *-dBAse* cmdlets in this module and make sure you *test*. It's easy to switch 
     the cmdlets back and forth.
 
 
