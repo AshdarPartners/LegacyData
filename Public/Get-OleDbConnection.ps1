@@ -91,7 +91,6 @@ function Get-OleDbConnection {
                 $builder."Extended Properties" = $ExtendedProperties
             }
             if ($Credential) {
-                $builder["Trusted_Connection"] = $false
                 $builder["User ID"] = $Credential.UserName
                 $builder["Password"] = $Credential.GetNetworkCredential().Password
             }
