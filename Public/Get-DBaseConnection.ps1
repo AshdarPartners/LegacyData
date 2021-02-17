@@ -36,6 +36,9 @@ function Get-DbaseConnection {
     The are usually key-value pairs in the format "Prop=something;AnotherProp=SomethingElse".
     No attempt is made to validate these properties or even validate the string. The first indication of trouble is usually that the Open() call will fail.
 
+    .PARAMETER Credential
+    This should be a 'standard' PSCredential object. Defaults to User="Admin", password = ""
+
     .EXAMPLE
     $cn = Get-DbaseConnection -DataSource (get-psdrive temp).root
     Invoke-DbaseQuery -Connect $cn -query 'select * from nrthwind'
