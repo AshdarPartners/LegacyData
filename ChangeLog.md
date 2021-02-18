@@ -1,14 +1,17 @@
 # Foreward:
-The LegacyData is built upon the basis of the ancient Ashdar.data module. 
+The LegacyData is built upon the basis of the ancient Ashdar.data module. It is a set of scripts that wrap the functionality of different database access technologies.
 
 The last official version of Ashdar.data was 2.0.3. To provide a cleaner migration, the first version of the LegacyData module will be 3.0.0 and will have a new module GUID. I am leaving the pre-3.0.0 changes here in this changelog for archaeological reasons.
 
 
 # Version Information
+
 ## Planned for $next version
 See [Github bug tracker](https://github.com/AshdarPartners/LegacyData/issues).
 
-## Implemented for 3.1.0 ($next version)
+## Implemented for 3.2.0 ($next planned version)
+
+## Implemented for 3.1.0
 1. Replace the old -UserId and -Password with -Credential, which is a much more modern and flexible approach.
 1. Added -Credential to Invoke-OleDbQuery, which had no prior provision for UserId and Password.
 1. Added -Credential support to Get-FoxProConnection and Get-DBaseConnection
