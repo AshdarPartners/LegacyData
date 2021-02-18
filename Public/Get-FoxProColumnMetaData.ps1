@@ -33,9 +33,9 @@ function Get-FoxProColumnMetaData {
 
     param (
         [Parameter(Mandatory = $True, ValueFromPipeline = $True, ValueFromPipelinebyPropertyName = $True)]
-        [string] $Datasource,
-        [string] $TableName,
-        [string] $ColumnName
+        $Datasource,
+        $TableName,
+        $ColumnName
     )
 
     try {
