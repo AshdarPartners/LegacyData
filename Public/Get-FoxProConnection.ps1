@@ -42,6 +42,8 @@ function Get-FoxProConnection {
 
     I do know that CREATE TABLE statements that I tried do not work in the ACE drivers.
 
+    Tables with memo fields are not compatible betwen dBase and FoxPro. Indexes are also a problem.
+
     If you want to use ACE, simply use the *-dBAse* cmdlets in this module and make sure you *test*. It's easy to switch 
     the cmdlets back and forth.
 

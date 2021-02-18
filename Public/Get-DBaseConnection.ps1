@@ -14,9 +14,12 @@ function Get-DbaseConnection {
     This cmdlet uses "ACE", which is available for 32 bit and 64 bit versions of Windows. It is freely downloadable from 
     Microsoft's site. Installing both, side-by-side, seems to be difficult/impossible. Google for details.
 
-    AFAIK, this cmdlet will work with FoxPro data for reads and writes, up to and including Visual Fox Pro 9.0, in a perfectly 
-    acceptable manner. I have not thoroughly tested this. 
+    AFAIK, this cmdlet will work with FoxPro data for simple reads and writes, up to and including Visual Fox Pro 9.0. 
+    Tables with memo fields are not compatible between dBase and FoxPro. If you have a FoxPro table with a memo field, dBase will
+    barf.
     
+    Indexes are also a problem. I wouldn't trust using indexes in cross FoxPro/dBase environment.
+
     If you have trouble using this cmdlet with FoxPro data, try the *-FoxPro* cmdlets in this module. They use Vfpoledb, which has
     it's own quirks and features, but should work better.
 
