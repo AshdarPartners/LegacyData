@@ -5,20 +5,17 @@ The last official version of Ashdar.data was 2.0.3. To provide a cleaner migrati
 
 
 # Version Information
-## FIXME: Planned for $next version
-0. These items should be in Github's bugtracker, not listed here.
-0. there is an interesting-looking OdbcConnect.GetSchema() method
-0. I would like to look at using ACE drivers here, particular when using FoxPro data from 64 bit sessions. Is all of the VfpOleDb fucntionality in the ACE driver?
-0. Functional tests for verious backends.
-   1. Functional tests (ideally) mean Create table, insert data, select data, update data, delete data, drop table.
-   1. For FoxPro (VfpOleDb and ACE), dBase. Maybe Excel and CSV?
-0. Not everything supported -UserId and -Password, nor supports -Credential. Does this make sense for Excel, Fox and dBase?
-0. I am leaving SNAC/System.Data.SqlClient out of this because it's not 'legacy' by any stretch. Similar for XML and JSON. OleDb, Odbc and Ado (we use COM-based ADO here, not .Net-based ADO.NET) are 'legacy', even though there are .net classes for them, becuase I said so.
+## Planned for $next version
+See [Github bug tracker](https://github.com/AshdarPartners/LegacyData/issues).
 
 ## Implemented for 3.1.0 ($next version)
 1. Replace the old -UserId and -Password with -Credential, which is a much more modern and flexible approach.
-1. Added -Credential to Invoke-OleDbQuery, which had no prior provision for UserId and Passname.
+1. Added -Credential to Invoke-OleDbQuery, which had no prior provision for UserId and Password.
+1. Added -Credential support to Get-FoxProConnection and Get-DBaseConnection
 1. The tests now have a way to abstract out credential and environment-specific information.
+1. Miscellaneous research on differences between FoxPro via VFPOLEDB and "ACE". 
+1. Started on some Pester tests for dBase and FoxPro.
+1. Moved various FIXME comments into the Github bug tracker. There are currently 13 open issues and 0 closed issues.
 1. Miscellaneous bug fixes.
 
 ## Implemented for 3.0.0
