@@ -89,16 +89,20 @@ function Invoke-DBaseQuery {
         [System.Collections.IDictionary] $SqlParameters
     )
 
-    switch ($PSCmdlet.ParameterSetName) {
-        'WithDataSource' {
-            $cn = Get-DbaseConnection -DataSource $DataSource
-        }
-        'WithConnection' {
-            $cn = $Connection
-        }
-    }
+    try {
 
-    Invoke-OleDbQuery -As $As -Query $Query -SqlParameters $SqlParameters -Connection $cn
+        switch ($PSCmdlet.ParameterSetName) {
+            'WithDataSource' {
+                $cn = Get-DbaseConnection -DataSource $DataSource
+            }
+            'WithConnection' {
+                $cn = $Connection
+            }
+        }
+
+        Invoke-OleDbQuery -As $As -Query $Query -SqlParameters $SqlParameters -Connection $cn
+
+    }
 
     catch {
         throw
