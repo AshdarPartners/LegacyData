@@ -40,6 +40,13 @@ function Invoke-FoxProQuery {
     Install the 64 bit drivers can be a problem if you are using 32 bit versions of the Office apps, which
     may people still do as Microsoft offered (and might still continue to offer) 32 bit as a default.
 
+    The VFP driver uses Datasource as the "root" of the database. You can specify tables in subdirectories. 
+    This means queries like these two, which point to the same tables, will work fine:
+    SELECT * FROM emp           ## Datasource is "c:\foo\subdir"
+    SELECT * FROM .\subdir\emp  ## Datasource is "c:\foo"
+
+    This will not work on the ACE drivers, which will not let you traverse subdirectories. 
+
     .EXAMPLE
     Invoke-FoxProQuery -Query "Select count(*) countOf From dept" -datasource "c:\fpdata"
 

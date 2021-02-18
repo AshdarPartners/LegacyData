@@ -37,6 +37,13 @@ function Invoke-DBaseQuery {
     Install the 64 bit drivers can be a problem if you are using 32 bit versions of the Office apps, which
     may people still do as Microsoft offered (and might still continue to offer) 32 bit as a default.
 
+    Note that the ACE driver will let traverse subfolders. This may be handy or may be dangerous, depending on your point of view
+    and how well locked down your stuff is. This works fine:
+
+    Invoke-DBASEQuery -DataSource "c:" -Query "SELECT * FROM c:\users\somebody\my\secret\fox\database\empsalry"
+
+    That ought to work with fileshares as well, ex: "SELECT * FROM \\BFS\someshare\users\somebody\my\secret\fox\database\empsalry"
+
     .EXAMPLE
     Invoke-DBaseQuery -Query "Select count(*) as countOf From dept" -datasource "c:\fpdata"
 
