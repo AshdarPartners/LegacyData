@@ -34,7 +34,8 @@ try {
 
     # that gives us sometjhing test with.
 
-    # FIXME: Cannot run an index command of any kind on FoxPro?
+    # https://github.com/AshdarPartners/LegacyData/issues/13
+    # Cannot run an index command of any kind on FoxPro?
     # I can't get these index commmands rigHt. Using the examples at the link (but my own table).
     # http://www.yaldex.com/fox_pro_tutorial/html/242d1feb-d43e-4831-9e4b-d0bb0b5fe4ae.htm
     #

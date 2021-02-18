@@ -38,7 +38,7 @@ try {
     Invoke-FoxProQuery -as NonQuery -Connection $cn -Query "EXECSCRIPT([INDEX ON fname + lname TAG idx_xname])"
     Invoke-FoxProQuery -as NonQuery -Connection $cn -Query "EXECSCRIPT([INDEX ON presdentid TAG pkpresdent CANDIDATE])"
 
-    # fixme: indexing on DELETED doesn't work here.
+    # Note: indexing on DELETED doesn't work here.
     # Why? See 'binary indexes', https://www.codemag.com/Article/0404022/What's-New-with-Data-in-Visual-FoxPro-9
     # "EXECSCRIPT([INDEX ON DELETED() TAG DELETED BINARY])"
 

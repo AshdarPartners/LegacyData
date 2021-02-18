@@ -75,23 +75,12 @@ function Get-DbaseConnection {
 
     )
 
-    # Jet and ACE strings. Jet was 32 bit only, ACE has 32 bit and 64 bit builds.
-    # Having 32 bit is more popular, apparently, even on 64 bit OSes as MS has been pushing 32 bit Office until 2018 or 2019.
-    # Installing 32 bit and 64 bit side-by-side seems to be complex; google for it.
-    #
-    # Provider=Microsoft.Jet.OLEDB.4.0;Data Source=c:\folder;Extended Properties=dBASE IV; User ID=Admin; Password=;
-    # Provider=Microsoft.ACE.OLEDB.12.0; Data Source=c:\folder;Extended Properties=dBASE IV; User ID=Admin;
-
-    # FIXME: Which version to use?
-    # I've always just hard-coded whatever is on my workstation, BUT there must be a better way to pick one.
-    # right now, Get-InstalledDatabaseDriverList shows these 32 bit Ace OLEDB drivers. BUT, the only one
-    # that works is 16.0. I believe that this corresponds to Access 2016. Wierdly, both 12.0 and 15.0
-    # claime to be version 15.0.4873.1000
-    # [string] $Provider = 'Microsoft.ACE.OLEDB.12.0'
-    # [string] $Provider = 'Microsoft.ACE.OLEDB.15.0'
-
-    # How do I know which version of the provider to use? Can't I just say "use ACE" and let the system find the best version? 
+    # When it comes to provider choice, I've always just hard-coded whatever is on my workstation. This has the problem of 
+    # breaking every few years or when I move to a different workstation. There must be a better way to pick the version of ACE.
+    # How do I know which version of the provider to use? Can't I just say "use ACE" and let the system find the best version?
+    # IOW, not all of these are on my system, so how do I know what to pick 
     [string] $Provider = 'Microsoft.ACE.OLEDB.12.0'
+    # [string] $Provider = 'Microsoft.ACE.OLEDB.15.0'
     [string] $Provider = 'Microsoft.ACE.OLEDB.16.0'
 
     [string] $ExtendedProperties = 'dBASE IV;'

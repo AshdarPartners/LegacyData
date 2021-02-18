@@ -118,7 +118,6 @@
 
         [int] $CommandTimeout = 300,
 
-        # fixme: Implement "PSObject", which is available in other "invoke-query" functions
         [ValidateSet("DataSet", "DataTable", "DataRow", "SingleValue", "NonQuery")]
         [string] $As = "DataRow",
 
