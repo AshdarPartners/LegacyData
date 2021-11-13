@@ -11,12 +11,17 @@ See [Github bug tracker](https://github.com/AshdarPartners/LegacyData/issues).
 
 ## Implemented for 3.2.0 ($next planned version)
 
+## Implemented for 3.1.1
+
+### Changed
+- Do not try to free OLEDB connections that don't exist
+
 ## Implemented for 3.1.0
 1. Replace the old -UserId and -Password with -Credential, which is a much more modern and flexible approach.
 1. Added -Credential to Invoke-OleDbQuery, which had no prior provision for UserId and Password.
 1. Added -Credential support to Get-FoxProConnection and Get-DBaseConnection
 1. The tests now have a way to abstract out credential and environment-specific information.
-1. Miscellaneous research on differences between FoxPro via VFPOLEDB and "ACE". 
+1. Miscellaneous research on differences between FoxPro via VFPOLEDB and "ACE".
 1. Started on some Pester tests for dBase and FoxPro.
 1. Moved various FIXME comments into the Github bug tracker. There are currently 13 open issues and 0 closed issues.
 1. Miscellaneous bug fixes.
@@ -40,7 +45,7 @@ OleDb is pretty much done, but FoxPro and Dbase remain.
 ## Version 2.0.0
 1. Cmdlet names were confusing.
     1. "Show" wasn't the correct verb to use here, changed to the more-generic "Get".
-    2. Many cmdlet names should have 'MetaData' at the end. They are retrieving data about 
+    2. Many cmdlet names should have 'MetaData' at the end. They are retrieving data about
         database objects
 3. "NonQuery" did nt deserve its' own function.
 4. The code now follows best practice suggestions from PSSA more closely.
@@ -52,7 +57,7 @@ OleDb is pretty much done, but FoxPro and Dbase remain.
 1. Some modernization of the existing "Show" cmdlets.
 2. Added Show-ADOIndex
 3. Added Show-OleDBSchema for tables, indexes and columns
-4. Added Invoke-FoxProQuery and Invoke-FoxProNonQuery, including support for parameterized queries 
+4. Added Invoke-FoxProQuery and Invoke-FoxProNonQuery, including support for parameterized queries
 4. Added Invoke-DbaseQuery and Invoke-DbaseNonQuery, includig support for parameterized queries
 5. Added Show-FoxPro for tables, indexes and columns.
 6. Added Show-dBase for tables, indexes and columns.

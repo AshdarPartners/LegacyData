@@ -118,8 +118,8 @@
 
         [int] $CommandTimeout = 300,
 
-        [ValidateSet("DataSet", "DataTable", "DataRow", "SingleValue", "NonQuery")]
-        [string] $As = "DataRow",
+        [ValidateSet('DataSet', 'DataTable', 'DataRow', 'SingleValue', 'NonQuery')]
+        [string] $As = 'DataRow',
 
         [System.Collections.IDictionary] $SqlParameters,
 
@@ -220,8 +220,10 @@
     Finally {
         # if we were passed a connection, do not close it. Closing it is the responsibility of the caller.
         if ($PSCmdlet.ParameterSetName -ne 'WithConnection') {
-            $OleDbConn.Close()
-            $OleDbConn.Dispose()
+            if ($OleDbConn) {
+                $OleDbConn.Close()
+                $OleDbConn.Dispose()
+            }
         }
     }
 }

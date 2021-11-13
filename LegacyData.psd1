@@ -12,7 +12,7 @@
     RootModule        = 'LegacyData'
 
     # Version number of this module.
-    ModuleVersion     = '3.1.0'
+    ModuleVersion     = '3.1.1'
 
     # ID used to uniquely identify this module
     GUID              = '779f9757-c463-4737-b0f2-1c589cb97396'
@@ -145,7 +145,7 @@
             # ExternalModuleDependencies = ''
 
         } # End of PSData hashtable
-    
+
     } # End of PrivateData hashtable
 
     # HelpInfo URI of this module
