@@ -105,21 +105,25 @@ function Get-OleDbTableMetadata {
 
         # Doc for parameters for GetOleDbSchemaTable call:
         # https://social.msdn.microsoft.com/Forums/en-US/75fb3085-bc3d-427c-9257-30631235c3af/getoledbschematableoledboledbschemaguidindexes-how-to-access-included-columns-on-index?forum=vblanguage
-        # becuase of the way thatis call works, the four parameters here can't be declared as [string] in PowerShell. 
+        # because of the way that this call works, the four parameters here can't be declared as [string] in PowerShell.
         # It seems to have to do with the nullability of the variables. There seems to be a difference between:
         # [string], [nullable][string] and <no datatype declaration>.
-        $OleDbConn.GetOleDbSchemaTable([OleDbSchemaGuid]::Tables, ($TableCatalog, $TableSchema, $TableName, $Type)) |
-            Select-Object @{n = "TableCatalog"; e = { $_.TABLE_CATALOG } },
-            @{n = "TableSchema"; e = { $_.TABLE_SCHEMA } },
-            @{n = "TableName"; e = { $_.TABLE_NAME } },
-            @{n = "Type"; e = { $_.TABLE_TYPE } },
-            @{n = "TableGUID"; e = { $_.TABLE_GUID } },
-            @{n = "Description"; e = { $_.DESCRIPTION } },
-            @{n = "TablePropGUID"; e = { $_.TABLE_PROPID } },
-            @{n = "DateCreated"; e = { $_.DATE_CREATED } },
-            @{n = "DateModified"; e = { $_.DATE_CMODIFIED } },
-            @{n = "Datasource"; e = { $Datasource } }
 
+        ($OleDbConn.GetOleDbSchemaTable([OleDbSchemaGuid]::Tables, ($TableCatalog, $TableSchema, $TableName, $Type))).ForEach({
+                [PSCustomObject] @{
+                    TableCatalog  = $_.TABLE_CATALOG
+                    TableSchema   = $_.TABLE_SCHEMA
+                    TableName     = $_.TABLE_NAME
+                    Type          = $_.TABLE_TYPE
+                    TableGUID     = $_.TABLE_GUID
+                    Description   = $_.DESCRIPTION
+                    TablePropGUID = $_.TABLE_PROPID
+                    DateCreated   = $_.DATE_CREATED
+                    DateModified  = $_.DATE_CMODIFIED
+                    Datasource    = $Datasource
+                }
+            }
+        )
     }
 
     Catch {
@@ -129,8 +133,11 @@ function Get-OleDbTableMetadata {
     Finally {
         # if we were passed a connection, do not close it. Closing it is the responsibility of the caller.
         if ($PSCmdlet.ParameterSetName -ne 'WithConnection') {
-            $OleDbConn.Close()
-            $OleDbConn.Dispose()
+            # Do not free connections that don't exist
+            if ($OleDbConn) {
+                $OleDbConn.Close()
+                $OleDbConn.Dispose()
+            }
         }
     }
 

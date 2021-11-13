@@ -102,43 +102,46 @@ function Get-OleDbColumnMetadata {
 
         # Doc for parameters for GetOleDbSchemaTable call:
         # https://social.msdn.microsoft.com/Forums/en-US/75fb3085-bc3d-427c-9257-30631235c3af/getoledbschematableoledboledbschemaguidindexes-how-to-access-included-columns-on-index?forum=vblanguage
-        $OleDbConn.GetOleDbSchemaTable([OleDbSchemaGuid]::Columns, ($TableCatalog, $TableSchema, $TableName, $TableType)) |
-            Select-Object  @{n = "TableCatalog"; e = { $_.TABLE_CATALOG } },
-            @{n = "TableSchema"; e = { $_.TABLE_SCHEMA } },
-            @{n = "TableName"; e = { $_.TABLE_NAME } },
-            @{n = "ColumnName"; e = { $_.COLUMN_NAME } },
-            @{n = "OrdinalPosition"; e = { $_.ORDINAL_POSITION } },
-            @{n = "ColumnHasDefault"; e = { $_.COLUMN_HASDEFAULT } },
-            @{n = "ColumnDefault"; e = { $_.COLUMN_DEFAULT } },
-            # .TODO
-            # is this a bitwise column?
-            # Can you translate this, either at this, the ADO layer, or at the caller layer?
-            @{n = "ColumnFlags"; e = { $_.COLUMN_FLAGS } },
-            @{n = "IsNullable"; e = { $_.IS_NULLABLE } },
-            @{n = "DataType"; e = { $_.DATA_TYPE } },
-            # I am adding this as a user convenience; looking at the Raw data_type IDs is not helpful
-            @{n = "DataTypeDescription"; e = { [OleDbType]($_.DATA_TYPE) } },
+        # because of the way that this call works, the four parameters here can't be declared as [string] in PowerShell.
+        # It seems to have to do with the nullability of the variables. There seems to be a difference between:
+        # [string], [nullable][string] and <no datatype declaration>.
 
-            @{n = "NumericPrecision"; e = { $_.NUMERIC_PRECISION } },
-            @{n = "NumericScale"; e = { $_.NUMERIC_SCALE } },
-            @{n = "CharacterMaximumLength"; e = { $_.CHARACTER_MAXIMUM_LENGTH } },
-            @{n = "CharacterOctetLength"; e = { $_.CHARACTER_OCTET_LENGTH } },
+        ($OleDbConn.GetOleDbSchemaTable([OleDbSchemaGuid]::Columns, ($TableCatalog, $TableSchema, $TableName, $Type))).ForEach({
+                [PSCustomObject] @{
+                    TableCatalog           = $_.TABLE_CATALOG
+                    TableSchema            = $_.TABLE_SCHEMA
+                    TableName              = $_.TABLE_NAME
 
-            @{n = "CharacterSetCatalog"; e = { $_.CHARACTER_SET_CATALOG } },
-            @{n = "CharacterSetSchema"; e = { $_.CHARACTER_SET_SCHEMA } },
-            @{n = "CharacterSetName"; e = { $_.CHARACTER_SET_NAME } },
-
-            @{n = "CollationCatalog"; e = { $_.COLLATION_CATALOG } },
-            @{n = "CollationSchema"; e = { $_.COLLATION_SCHEMA } },
-            @{n = "CollationName"; e = { $_.COLLATION_NAME } },
-
-            @{n = "DomainCatalog"; e = { $_.DOMAIN_CATALOG } },
-            @{n = "DomainSchema"; e = { $_.DOMAIN_SCHEMA } },
-            @{n = "DomainName"; e = { $_.DOMAIN_NAME } },
-
-            @{n = "IsComputed"; e = { $_.IS_COMPUTED } },
-            @{n = "Datasource"; e = { $Datasource } }
-
+                    ColumnName             = $_.COLUMN_NAME
+                    OrdinalPosition        = $_.ORDINAL_POSITION
+                    ColumnHasDefault       = $_.COLUMN_HASDEFAULT
+                    ColumnDefault          = $_.COLUMN_DEFAULT
+                    # .TODO
+                    # is this a bitwise column?
+                    # Can you translate this, either at this, the ADO layer, or at the caller layer?
+                    ColumnFlags            = $_.COLUMN_FLAGS
+                    IsNullable             = $_.IS_NULLABLE
+                    DataType               = $_.DATA_TYPE
+                    # I am adding this as a user convenience; looking at the Raw data_type IDs is not helpful
+                    DataTypeDescription    = [OleDbType]($_.DATA_TYPE)
+                    NumericPrecision       = $_.NUMERIC_PRECISION
+                    NumericScale           = $_.NUMERIC_SCALE
+                    CharacterMaximumLength = $_.CHARACTER_MAXIMUM_LENGTH
+                    CharacterOctetLength   = $_.CHARACTER_OCTET_LENGTH
+                    CharacterSetCatalog    = $_.CHARACTER_SET_CATALOG
+                    CharacterSetSchema     = $_.CHARACTER_SET_SCHEMA
+                    CharacterSetName       = $_.CHARACTER_SET_NAME
+                    CollationCatalog       = $_.COLLATION_CATALOG
+                    CollationSchema        = $_.COLLATION_SCHEMA
+                    CollationName          = $_.COLLATION_NAME
+                    DomainCatalog          = $_.DOMAIN_CATALOG
+                    DomainSchema           = $_.DOMAIN_SCHEMA
+                    DomainName             = $_.DOMAIN_NAME
+                    IsComputed             = $_.IS_COMPUTED
+                    Datasource             = $Datasource
+                }
+            }
+        )
     }
 
     Catch {
@@ -148,8 +151,11 @@ function Get-OleDbColumnMetadata {
     Finally {
         # if we were passed a connection, do not close it. Closing it is the responsibility of the caller.
         if ($PSCmdlet.ParameterSetName -ne 'WithConnection') {
-            $OleDbConn.Close()
-            $OleDbConn.Dispose()
+            # Do not free connections that don't exist
+            if ($OleDbConn) {
+                $OleDbConn.Close()
+                $OleDbConn.Dispose()
+            }
         }
     }
 

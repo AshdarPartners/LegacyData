@@ -108,42 +108,78 @@ function Get-OleDbIndexMetadata {
 
         # Doc for parameters for GetOleDbSchemaTable call:
         # https://social.msdn.microsoft.com/Forums/en-US/75fb3085-bc3d-427c-9257-30631235c3af/getoledbschematableoledboledbschemaguidindexes-how-to-access-included-columns-on-index?forum=vblanguage
-        # becuase of the way thatis call works, the four parameters here can't be declared as [string] in PowerShell. 
+        # because of the way that this call works, the four parameters here can't be declared as [string] in PowerShell.
         # It seems to have to do with the nullability of the variables. There seems to be a difference between:
         # [string], [nullable][string] and <no datatype declaration>.
-        $OleDbConn.GetOleDbSchemaTable([OleDbSchemaGuid]::Indexes, ($TableCatalog, $TableSchema, $IndexName, $Type, $TableName)) |
-            Select-Object @{n = "TableCatalog"; e = { $_.TABLE_CATALOG } },
-            @{n = "TableSchema"; e = { $_.TABLE_SCHEMA } },
-            @{n = "TableName"; e = { $_.TABLE_NAME } },
-            @{n = "IndexCatalog"; e = { $_.INDEX_CATALOG } },
-            @{n = "IndexSchema"; e = { $_.INDEX_SCHEMA } },
-            @{n = "IndexName"; e = { $_.INDEX_NAME } },
 
-            @{n = "PrimaryKey"; e = { $_.PRIMARY_KEY } },
-            @{n = "Unique"; e = { $_.UNIQUE } },
-            @{n = "Clustered"; e = { $_.CLUSTERED } },
-            @{n = "Type"; e = { $_.TYPE } },
+        ($OleDbConn.GetOleDbSchemaTable([OleDbSchemaGuid]::Indexes, ($TableCatalog, $TableSchema, $TableName, $Type))).ForEach({
+                [PSCustomObject] @{
+                    TableCatalog    = $_.TABLE_CATALOG
+                    TableSchema     = $_.TABLE_SCHEMA
+                    TableName       = $_.TABLE_NAME
+                    IndexCatalog    = $_.INDEX_CATALOG
+                    IndexSchema     = $_.INDEX_SCHEMA
+                    IndexName       = $_.INDEX_NAME
+                    PrimaryKey      = $_.PRIMARY_KEY
+                    Unique          = $_.UNIQUE
+                    Clustered       = $_.CLUSTERED
+                    Type            = $_.TYPE
+                    FillFactor      = $_.FILL_FACTOR
+                    InitialSize     = $_.INITIAL_SIZE
+                    Nulls           = $_.NULLS
+                    SortBookmarks   = $_.SORT_BOOKMARKS
+                    AutoUpdate      = $_.AUTO_UPDATE
+                    NullCollation   = $_.NULL_COLLATION
+                    OrdinalPosition = $_.ORDINAL_POSITION
+                    ColumnName      = $_.COLUMN_NAME
+                    ColumnGuid      = $_.COLUMN_GUID
+                    ColumnPropID    = $_.COLUMN_PROPID
+                    Collation       = $_.COLLATION
+                    Cardinality     = $_.CARDINALITY
+                    Pages           = $_.PAGES
+                    FilterCondition = $_.FILTER_CONDITION
+                    Integrated      = $_.INTEGRATED
+                    # 'Expression' is in the ADO version of this tool, but not in the OleDb version.
+                    # Expression = $_.EXPRESSION
+                    Datasource      = $Datasource
+                }
+            }
+        )
 
-            @{n = "FillFactor"; e = { $_.FILL_FACTOR } },
-            @{n = "InitialSize"; e = { $_.INITIAL_SIZE } },
 
-            @{n = "Nulls"; e = { $_.NULLS } },
-            @{n = "SortBookmarks"; e = { $_.SORT_BOOKMARKS } },
-            @{n = "AutoUpdate"; e = { $_.AUTO_UPDATE } },
-            @{n = "NullCollation"; e = { $_.NULL_COLLATION } },
-            @{n = "OrdinalPosition"; e = { $_.ORDINAL_POSITION } },
+        # $OleDbConn.GetOleDbSchemaTable([OleDbSchemaGuid]::Indexes, ($TableCatalog, $TableSchema, $IndexName, $Type, $TableName)) |
+        #     Select-Object @{n = "TableCatalog"; e = { $_.TABLE_CATALOG } },
+        #     @{n = "TableSchema"; e = { $_.TABLE_SCHEMA } },
+        #     @{n = "TableName"; e = { $_.TABLE_NAME } },
 
-            @{n = "ColumnName"; e = { $_.COLUMN_NAME } },
-            @{n = "ColumnGuid"; e = { $_.COLUMN_GUID } },
-            @{n = "ColumnPropID"; e = { $_.COLUMN_PROPID } },
-            @{n = "Collation"; e = { $_.COLLATION } },
-            @{n = "Cardinality"; e = { $_.CARDINALITY } },
-            @{n = "Pages"; e = { $_.PAGES } },
-            @{n = "FilterCondition"; e = { $_.FILTER_CONDITION } },
-            @{n = "Integrated"; e = { $_.INTEGRATED } },
-            # 'Expression' is in the ADO version of this tool, but not in the OleDb version.
-            # @{n = "Expression"; e = {$_.EXPRESSION}}
-            @{n = "Datasource"; e = { $Datasource } }
+        #     @{n = "IndexCatalog"; e = { $_.INDEX_CATALOG } },
+        #     @{n = "IndexSchema"; e = { $_.INDEX_SCHEMA } },
+        #     @{n = "IndexName"; e = { $_.INDEX_NAME } },
+
+        #     @{n = "PrimaryKey"; e = { $_.PRIMARY_KEY } },
+        #     @{n = "Unique"; e = { $_.UNIQUE } },
+        #     @{n = "Clustered"; e = { $_.CLUSTERED } },
+        #     @{n = "Type"; e = { $_.TYPE } },
+
+        #     @{n = "FillFactor"; e = { $_.FILL_FACTOR } },
+        #     @{n = "InitialSize"; e = { $_.INITIAL_SIZE } },
+        #     @{n = "Nulls"; e = { $_.NULLS } },
+
+        #     @{n = "SortBookmarks"; e = { $_.SORT_BOOKMARKS } },
+        #     @{n = "AutoUpdate"; e = { $_.AUTO_UPDATE } },
+        #     @{n = "NullCollation"; e = { $_.NULL_COLLATION } },
+        #     @{n = "OrdinalPosition"; e = { $_.ORDINAL_POSITION } },
+        #     @{n = "ColumnName"; e = { $_.COLUMN_NAME } },
+        #     @{n = "ColumnGuid"; e = { $_.COLUMN_GUID } },
+        #     @{n = "ColumnPropID"; e = { $_.COLUMN_PROPID } },
+        #     @{n = "Collation"; e = { $_.COLLATION } },
+        #     @{n = "Cardinality"; e = { $_.CARDINALITY } },
+        #     @{n = "Pages"; e = { $_.PAGES } },
+        #     @{n = "FilterCondition"; e = { $_.FILTER_CONDITION } },
+        #     @{n = "Integrated"; e = { $_.INTEGRATED } },
+        #     # 'Expression' is in the ADO version of this tool, but not in the OleDb version.
+        #     # @{n = "Expression"; e = {$_.EXPRESSION}}
+        #     @{n = "Datasource"; e = { $Datasource } }
 
     }
 
@@ -154,8 +190,11 @@ function Get-OleDbIndexMetadata {
     Finally {
         # if we were passed a connection, do not close it. Closing it is the responsibility of the caller.
         if ($PSCmdlet.ParameterSetName -ne 'WithConnection') {
-            $OleDbConn.Close()
-            $OleDbConn.Dispose()
+            # Do not free connections that don't exist
+            if ($OleDbConn) {
+                $OleDbConn.Close()
+                $OleDbConn.Dispose()
+            }
         }
     }
 }
