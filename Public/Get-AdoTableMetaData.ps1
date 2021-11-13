@@ -39,6 +39,7 @@ function Get-AdoTableMetaData {
     }
 
     process {
+        #FIXME: Rework to be more like the ForEach() tactic that Get-OleDbTableMetadata uses
         # translate from "INFORMATION_SCHEMA"-like naming to Powershell-like naming.
         Get-AdoSchemaMetaData -SchemaType $adSchemaTables -Provider $Provider -Datasource $Datasource -ExtendedProperties $ExtendedProperties |
             Where-Object { $_.TABLE_NAME -match $TableName } |

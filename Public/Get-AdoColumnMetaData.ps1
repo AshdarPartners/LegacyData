@@ -48,6 +48,7 @@ function Get-AdoColumnMetaData {
     }
 
     process {
+        #FIXME: Rework to be more like the ForEach() tactic that Get-OleDbTableMetadata uses
         Get-AdoSchemaMetaData -SchemaType $adSchemaColumns -Provider $Provider -Datasource $Datasource -ExtendedProperties $ExtendedProperties |
             Where-Object {($_.TABLE_NAME -match $TableName) -and ($_.COLUMN_NAME -match $ColumnName)} |
             Select-Object @{n = "TableName"; e = {$_.TABLE_NAME}},

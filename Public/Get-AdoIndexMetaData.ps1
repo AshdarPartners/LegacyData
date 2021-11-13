@@ -43,6 +43,7 @@ function Get-AdoIndexMetaData {
     }
 
     process {
+        #FIXME: Rework to be more like the ForEach() tactic that Get-OleDbTableMetadata uses
         Get-AdoSchemaMetaData -SchemaType $adSchemaIndexes -Provider $Provider -Datasource $Datasource -ExtendedProperties $ExtendedProperties |
             Where-Object {($_.TABLE_NAME -match $TableName)} |
             Select-Object @{n = "TableCatalog"; e = {$_.TABLE_CATALOG}},
