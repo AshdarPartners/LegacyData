@@ -12,7 +12,7 @@
     RootModule        = 'LegacyData'
 
     # Version number of this module.
-    ModuleVersion     = '3.1.1'
+    ModuleVersion     = '3.2.0'
 
     # ID used to uniquely identify this module
     GUID              = '779f9757-c463-4737-b0f2-1c589cb97396'
