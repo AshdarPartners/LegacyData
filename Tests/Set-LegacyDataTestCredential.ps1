@@ -14,14 +14,15 @@ While Export- and Import-Clixml is pretty widely used, I took the basic structur
 $FileDirectory = "${env:\userprofile}"
 $FileName = 'LegacyData.Tests.cred'
 
-$FilePath = Join-Path -path $FileDirectory -child $FileName
+$FilePath = Join-Path -Path $FileDirectory -child $FileName
 
-# I am only using 'User' at this time. 
+# I am only using 'User' at this time.
 $Hash = @{
     # 'Admin'      = Get-Credential -Message 'Please enter administrative credentials'
     # 'RemoteUser' = Get-Credential -Message 'Please enter remote user credentials'
-    'User'       = Get-Credential -Message 'Please enter user credentials'
+    # 'User'       = Get-Credential -Message 'Please enter user credentials'
+    'SqlServerUser' = Get-Credential -Message 'Please enter Sql Server user credentials'
 }
 $Hash | Export-Clixml -Path $FilePath
 
-Write-Verbose -verbose -Message "Wrote credentials to '$FilePath'"
+Write-Verbose -Verbose -Message "Wrote credentials to '$FilePath'"

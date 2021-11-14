@@ -10,11 +10,11 @@ Import-Module $ManifestFile -DisableNameChecking -Force
 $TestConfiguration = Invoke-Expression -Command (Join-Path -Path $PSScriptRoot -ChildPath 'Get-LegacyDataTestValue.ps1')
 
 # 'User' is one of several possible users.
-$SqlLoginCredential = (Invoke-Expression -Command (Join-Path -Path $PSScriptRoot -ChildPath 'Get-LegacyDataTestCredential.ps1')).User
+$SqlLoginCredential = (Invoke-Expression -Command (Join-Path -Path $PSScriptRoot -ChildPath 'Get-LegacyDataTestCredential.ps1')).SqlServerUser
 
 $cp = @{
-    Provider   = 'sqloledb' 
-    Credential = $SqlLoginCredential 
+    Provider   = 'sqloledb'
+    Credential = $SqlLoginCredential
     DataSource = $TestConfiguration.SqlOleDbHostName
     # Invoke-OleDbQuery doesn't suport a -DatabaseName or -InitialCatalog
     # If we wanted to specify a particular database, we'd have to stuff thisinthe Extended properties parameter.
