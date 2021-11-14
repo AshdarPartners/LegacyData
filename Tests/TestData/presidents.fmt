@@ -1,0 +1,4 @@
+9.0
+2
+1  SQLCHAR  0  40 "\t"        1  lname              SQL_Latin1_General_Cp437_BIN
+2  SQLCHAR  0  40 "\r\n"      2  fname              SQL_Latin1_General_Cp437_BIN
