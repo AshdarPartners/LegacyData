@@ -22,7 +22,10 @@ function Get-AdoColumnMetaData {
     What is the table of interest? This parameter uses -match semantics.
 
     .EXAMPLE
-    Get-AdoColumnMetaData -Datasource:"$c:\dev\presidents.mdb" -columnname:"e" -provider:"Microsoft.Ace.OLEDB.12.0"
+    Get-AdoColumnMetaData -Datasource ".\TestData\presidents.mdb" -columnname "e" -Provider "Microsoft.Ace.OLEDB.12.0"
+
+    .EXAMPLE
+    Get-AdoColumnMetaData -Datasource ".\TestData\presidents.mdb" -Provider "Microsoft.Jet.OLEDB.4.0"
 
     .LINK
     http://www.carlprothman.net/Technology/ConnectionStrings/ODBCDSNLess/tabid/90/Default.aspx
@@ -38,8 +41,8 @@ function Get-AdoColumnMetaData {
         [Parameter(Mandatory = $True, ValueFromPipeline = $True, ValueFromPipelinebyPropertyName = $True)]
         [string] $Datasource,
         [string] $ExtendedProperties,
-        [string] $TableName = ".*",
-        [string] $ColumnName = ".*"
+        [string] $TableName = '.*',
+        [string] $ColumnName = '.*'
     )
 
 
@@ -48,27 +51,28 @@ function Get-AdoColumnMetaData {
     }
 
     process {
-        #FIXME: Rework to be more like the ForEach() tactic that Get-OleDbTableMetadata uses
-        Get-AdoSchemaMetaData -SchemaType $adSchemaColumns -Provider $Provider -Datasource $Datasource -ExtendedProperties $ExtendedProperties |
-            Where-Object {($_.TABLE_NAME -match $TableName) -and ($_.COLUMN_NAME -match $ColumnName)} |
-            Select-Object @{n = "TableName"; e = {$_.TABLE_NAME}},
-        @{n = "ColumnName"; e = {$_.COLUMN_NAME}},
-        @{n = "OrdinalPosition"; e = {$_.ORDINAL_POSITION}},
-        @{n = "ColumnHasDefault"; e = {$_.COLUMN_HASDEFAULT}},
-        @{n = "ColumnDefault"; e = {$_.COLUMN_DEFAULT}},
-        # .TODO
-        # is this  a bitwise column?
-        # Can you translate this, either at this, the ADO layer, or at the caller layer?
-        @{n = "ColumnFlags"; e = {$_.COLUMN_FLAGS}},
-        @{n = "IsNullable"; e = {$_.IS_NULLABLE}},
-        @{n = "DataType"; e = {$_.DATA_TYPE}},
-        @{n = "NumericPrecision"; e = {$_.NUMERIC_PRECISION}},
-        @{n = "NumericScale"; e = {$_.NUMERIC_SCALE}},
-        @{n = "CharacterMaximumLength"; e = {$_.CHARACTER_MAXIMUM_LENGTH}},
-        @{n = "CharacterOctetLength"; e = {$_.CHARACTER_OCTET_LENGTH}},
-        @{n = "Datasource"; e = {$Datasource}}
-
+        (Get-AdoSchemaMetaData -SchemaType $adSchemaColumns -Provider $Provider -Datasource $Datasource -ExtendedProperties $ExtendedProperties |
+            Where-Object { ($_.TABLE_NAME -match $TableName) -and ($_.COLUMN_NAME -match $ColumnName) }).ForEach(
+            {
+                [PSCustomObject] @{
+                    TableName              = $_.TABLE_NAME
+                    ColumnName             = $_.COLUMN_NAME
+                    OrdinalPosition        = $_.ORDINAL_POSITION
+                    ColumnHasDefault       = $_.COLUMN_HASDEFAULT
+                    ColumnDefault          = $_.COLUMN_DEFAULT
+                    # .TODO
+                    # is this  a bitwise column?
+                    # Can you translate this, either at this, the ADO layer, or at the caller layer?
+                    ColumnFlags            = $_.COLUMN_FLAGS
+                    IsNullable             = $_.IS_NULLABLE
+                    DataType               = $_.DATA_TYPE
+                    NumericPrecision       = $_.NUMERIC_PRECISION
+                    NumericScale           = $_.NUMERIC_SCALE
+                    CharacterMaximumLength = $_.CHARACTER_MAXIMUM_LENGTH
+                    CharacterOctetLength   = $_.CHARACTER_OCTET_LENGTH
+                    Datasource             = $Datasource
+                }
+            }
+        )
     }
-
 }
-

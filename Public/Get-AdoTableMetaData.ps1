@@ -31,7 +31,7 @@ function Get-AdoTableMetaData {
         [Parameter(Mandatory = $True, ValueFromPipeline = $True, ValueFromPipelinebyPropertyName = $True)]
         [string] $Datasource,
         [string] $ExtendedProperties,
-        [string] $TableName = ".*"
+        [string] $TableName = '.*'
     )
 
     begin {
@@ -39,20 +39,23 @@ function Get-AdoTableMetaData {
     }
 
     process {
-        #FIXME: Rework to be more like the ForEach() tactic that Get-OleDbTableMetadata uses
-        # translate from "INFORMATION_SCHEMA"-like naming to Powershell-like naming.
-        Get-AdoSchemaMetaData -SchemaType $adSchemaTables -Provider $Provider -Datasource $Datasource -ExtendedProperties $ExtendedProperties |
-            Where-Object { $_.TABLE_NAME -match $TableName } |
-            Select-Object @{n = "TableCatalog"; e = { $_.TABLE_CATALOG } },
-            @{n = "TableSchema"; e = { $_.TABLE_SCHEMA } },
-            @{n = "TableName"; e = { $_.TABLE_NAME } },
-            @{n = "TableType"; e = { $_.TABLE_TYPE } },
-            @{n = "TableGUID"; e = { $_.TABLE_GUID } },
-            @{n = "Description"; e = { $_.DESCRIPTION } },
-            @{n = "TablePropGUID"; e = { $_.TABLE_PROPID } },
-            @{n = "DateCreated"; e = { $_.DATE_CREATED } },
-            @{n = "DateModified"; e = { $_.DATE_CMODIFIED } },
-            @{n = "Datasource"; e = { $Datasource } }
+        (Get-AdoSchemaMetaData -SchemaType $adSchemaTables -Provider $Provider -Datasource $Datasource -ExtendedProperties $ExtendedProperties |
+            Where-Object { $_.TABLE_NAME -match $TableName }).ForEach(
+            {
+                [PSCustomObject] @{
+                    TableCatalog  = $_.TABLE_CATALOG
+                    TableSchema   = $_.TABLE_SCHEMA
+                    TableName     = $_.TABLE_NAME
+                    TableType     = $_.TABLE_TYPE
+                    TableGUID     = $_.TABLE_GUID
+                    Description   = $_.DESCRIPTION
+                    TablePropGUID = $_.TABLE_PROPID
+                    DateCreated   = $_.DATE_CREATED
+                    DateModified  = $_.DATE_CMODIFIED
+                    Datasource    = $_.Datasource
+                }
+            }
+        )
     }
 }
 
