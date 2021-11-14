@@ -3,5 +3,6 @@
     "SqlOleDbHostName": "localhost",
     "SqlOleDbDatabaseName": "master",
     "DBaseNorthWindDbPath": "C:\\Program Files (x86)\\Microsoft Visual FoxPro OLE DB Provider\\Samples\\Northwind",
-    "FoxProNorthWindDbPath": "C:\\Program Files (x86)\\Microsoft Visual FoxPro OLE DB Provider\\Samples\\Northwind"
+    "FoxProNorthWindDbPath": "C:\\Program Files (x86)\\Microsoft Visual FoxPro OLE DB Provider\\Samples\\Northwind",
+    "AccessPresidentPath": ".\\Tests\\TestData\\Presidents.mdb"
 }
