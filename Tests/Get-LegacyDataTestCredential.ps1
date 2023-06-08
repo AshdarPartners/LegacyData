@@ -13,13 +13,19 @@ param()
 $FileDirectory = "${env:\userprofile}"
 $FileName = 'LegacyData.Tests.cred'
 
-$FilePath = Join-Path -path $FileDirectory -child $FileName
+$FilePath = Join-Path -Path $FileDirectory -child $FileName
 
-$Hash = Import-CliXml -Path $FilePath
+if (Test-Path -Path $FilePath) {
 
-Write-Verbose -Message "Read credentials from '$FilePath'"
+    $Hash = Import-Clixml -Path $FilePath
 
-# I used this as a test, when coding this script
-# invoke-sqlcmd2 -ServerInstance localhost -Query 'select getdate() RightNow, @@servername sn' -Credential $Hash.User 
+    Write-Verbose -Message "Read credentials from '$FilePath'"
 
-$Hash
+    # I used this as a test, when coding this script
+    # invoke-sqlcmd2 -ServerInstance localhost -Query 'select getdate() RightNow, @@servername sn' -Credential $Hash.User
+
+    $Hash
+}
+else {
+    Write-Warning -Message "Can not read credentials from missing file '$FilePath'"
+}
