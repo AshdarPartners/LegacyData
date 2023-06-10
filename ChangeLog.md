@@ -18,6 +18,7 @@ I am leaving the pre-3.0.0 changes here in this changelog for archaeological rea
 
 ### Changed
 
+- Clean up some environmental issues with the tests. Moved from Docker to Podman.
 - Bump the version number
 
 ## 3.2.0 - 2021-11-14
