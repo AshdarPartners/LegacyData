@@ -21,7 +21,9 @@ $cp = @{
 
 Describe "Check AccessPresidentPath to a test MDB" -Tag TestValues {
 
-    $Report = Test-path -path $TestConfiguration.AccessPresidentPath
+    $AccessFilePath = Join-Path -Path $Path -ChildPath $TestConfiguration.AccessPresidentPath
+
+    $Report = Test-path -path $AccessFilePath
 
     It "MDB should exist" {
         $Report | Should -BeTrue

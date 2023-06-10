@@ -22,10 +22,10 @@ else {
     $Provider = 'Microsoft.Jet.OLEDB.4.0'
 }
 
-
+$AccessFilePath = Join-Path -Path $Path -ChildPath $TestConfiguration.AccessPresidentPath
 $cp = @{
     Provider   = $Provider
-    DataSource = $TestConfiguration.AccessPresidentPath
+    DataSource = $AccessFilePath
 }
 
 Describe "Get-AdoColumnMetaData with -datasource to '$($cp.DataSource)'" -Tag $CommandName, DataSource, ADO {

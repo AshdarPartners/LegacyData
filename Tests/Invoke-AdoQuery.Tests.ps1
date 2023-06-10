@@ -22,9 +22,10 @@ else {
 }
 
 
+$AccessFilePath = Join-Path -Path $Path -ChildPath $TestConfiguration.AccessPresidentPath
 $cp = @{
     Provider   = $Provider
-    DataSource = $TestConfiguration.AccessPresidentPath
+    DataSource = $AccessFilePath
 }
 
 Describe "Ado simple query to '$($cp.DataSource)'" -Tag $CommandName, ADO {
