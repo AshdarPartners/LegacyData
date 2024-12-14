@@ -4,20 +4,20 @@ function Get-DbaseConnection {
     Returns an OleDB connection to a DBase database
 
     .DESCRIPTION
-    Returns an OleDB connection to a DBase database. 
-    
+    Returns an OleDB connection to a DBase database.
+
     This *seems* to work for FoxPro as well, but there has not been extenstive testing.
 
-    www.connectionstrings.com is an excellent resource for connection strings for specfic drivers.
+    www.connectionstrings.com is an excellent resource for connection strings for specific drivers.
 
     .NOTES
-    This cmdlet uses "ACE", which is available for 32 bit and 64 bit versions of Windows. It is freely downloadable from 
+    This cmdlet uses "ACE", which is available for 32 bit and 64 bit versions of Windows. It is freely downloadable from
     Microsoft's site. Installing both, side-by-side, seems to be difficult/impossible. Google for details.
 
-    AFAIK, this cmdlet will work with FoxPro data for simple reads and writes, up to and including Visual Fox Pro 9.0. 
+    AFAIK, this cmdlet will work with FoxPro data for simple reads and writes, up to and including Visual Fox Pro 9.0.
     Tables with memo fields are not compatible between dBase and FoxPro. If you have a FoxPro table with a memo field, dBase will
     barf.
-    
+
     Indexes are also a problem. I wouldn't trust using indexes in cross FoxPro/dBase environment.
 
     If you have trouble using this cmdlet with FoxPro data, try the *-FoxPro* cmdlets in this module. They use Vfpoledb, which has
@@ -75,10 +75,10 @@ function Get-DbaseConnection {
 
     )
 
-    # When it comes to provider choice, I've always just hard-coded whatever is on my workstation. This has the problem of 
+    # When it comes to provider choice, I've always just hard-coded whatever is on my workstation. This has the problem of
     # breaking every few years or when I move to a different workstation. There must be a better way to pick the version of ACE.
     # How do I know which version of the provider to use? Can't I just say "use ACE" and let the system find the best version?
-    # IOW, not all of these are on my system, so how do I know what to pick 
+    # IOW, not all of these are on my system, so how do I know what to pick
     [string] $Provider = 'Microsoft.ACE.OLEDB.12.0'
     # [string] $Provider = 'Microsoft.ACE.OLEDB.15.0'
     [string] $Provider = 'Microsoft.ACE.OLEDB.16.0'

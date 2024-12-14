@@ -5,7 +5,7 @@
 
     .DESCRIPTION
     Queries an OleDb data source, given an OleDb provider, DataSource and query. Returns a DataTable
-    www.connectionstrings.com is an excellent resource for connection strings for specfic drivers.
+    www.connectionstrings.com is an excellent resource for connection strings for specific drivers.
 
     .OUTPUTS
     DataSet, DataTable, DataRow, SingleValue or None. This is controlled by the -As parameter.

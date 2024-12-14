@@ -10,7 +10,7 @@ Import-Module $ManifestFile -DisableNameChecking -Force
 OleDb can connect to pretty much any database.
 The module deals with "ISAM"-style databases.
 I am testing this with SQL because I always have an instance running and I'm familiar with it.
-I intend to create specfic tests for the various databases that are supported.
+I intend to create specific tests for the various databases that are supported.
 #>
 
 $TestConfiguration = Invoke-Expression -Command (Join-Path -Path $PSScriptRoot -ChildPath 'Get-LegacyDataTestValue.ps1')
