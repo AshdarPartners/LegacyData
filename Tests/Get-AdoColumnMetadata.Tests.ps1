@@ -13,7 +13,7 @@ $TestConfiguration = Invoke-Expression -Command (Join-Path -Path $PSScriptRoot -
 
 
 if ([Environment]::Is64BitProcess) {
-    # If this fails, you might try ACE verisons other than 12 like 13, 14, 15, 16 and so forth
+    # If this fails, you might try ACE versions other than 12 like 13, 14, 15, 16 and so forth
     # ACE has 32 bit and 64 bit drivers.
     $Provider = 'Microsoft.ACE.OLEDB.12.0'
 }
