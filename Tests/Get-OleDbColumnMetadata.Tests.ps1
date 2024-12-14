@@ -16,7 +16,7 @@ $cp = @{
     Credential = $SqlLoginCredential
     DataSource = $TestConfiguration.SqlOleDbHostName
     # Invoke-OleDbQuery doesn't support a -DatabaseName or -InitialCatalog
-    # If we wanted to specify a particular database, we'd have to stuff thisinthe Extended properties parameter.
+    # If we wanted to specify a particular database, we'd have to stuff this in the Extended properties parameter.
     # or we could cheat by using a FROM clause and a three-part name. That would only work with SqlServer.
     # DataSource = $TestConfiguration.SqlOleDbDatabaseName
 }
