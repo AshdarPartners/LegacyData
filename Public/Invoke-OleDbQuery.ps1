@@ -68,7 +68,7 @@
     $Query = "select getdate() RightNow where getdate() > ? "
     $Params = @{WasThen = "1/1/1980"}
     $Report = Invoke-OLEDBQuery -DataSource $DataSource -Provider 'sqloledb' -ExtendedProperties "Trusted_Connection=Yes" -query $Query -SqlParameters $params
-    This shows a parameterized query. This query uses the ? as a placeholder and not @SomeName becuase we are using oledb and not sqlclient.
+    This shows a parameterized query. This query uses the ? as a placeholder and not @SomeName because we are using oledb and not sqlclient.
 
     .LINK
     http://stackoverflow.com/questions/10149910/use-powershell-to-save-a-datatable-as-a-csv
