@@ -81,7 +81,13 @@ if ($env:LegacyDataSqlClientDBPassword) {
 # $password = ConvertTo-SecureString $Env:SA_PASSWORD -AsPlainText -Force
 # $SqlCredential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "sa", $password
 
+# Resolve a fully qualified file path for the mdb file
+$TestConfiguration.AccessPresidentPath = Join-Path -Path $PSScriptRoot -Child $TestConfiguration.AccessPresidentPath
 
+if (-not (Test-Path -Path $TestConfiguration.AccessPresidentPath)) {
+    $Message = "The Access President database was not found at '{0}'" -f @($TestConfiguration.AccessPresidentPath)
+    Throw [System.IO.FileNotFoundException] $Message
+}
 
 Write-Verbose -Message "Read Test values from '$ConfigurationFilePath'"
 

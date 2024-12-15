@@ -1,5 +1,5 @@
 {
-    "Comment": "This is the official test environment, as of 2021/02/12. @dstrait",
+    "Comment": "This is the official test environment, as of 2024/12/14.",
     "OleDbHostName": "127.0.0.1",
     "OleDbDatabaseName": "master",
     "OleDbDbUser": "sa",
@@ -10,5 +10,5 @@
     "SqlClientDbPassword": "!test123",
     "DBaseNorthWindDbPath": "C:\\Program Files (x86)\\Microsoft Visual FoxPro OLE DB Provider\\Samples\\Northwind",
     "FoxProNorthWindDbPath": "C:\\Program Files (x86)\\Microsoft Visual FoxPro OLE DB Provider\\Samples\\Northwind",
-    "AccessPresidentPath": ".\\Tests\\TestData\\Presidents.mdb"
+    "AccessPresidentPath": "TestData\\Presidents.mdb"
 }
