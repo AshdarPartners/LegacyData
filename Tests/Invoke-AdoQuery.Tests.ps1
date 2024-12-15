@@ -38,13 +38,16 @@ Describe "Ado simple query to '$($cp.DataSource)'" -Tag $CommandName, ADO {
 
 # Invoke-AdoQuery does not support '-SqlParameters' like Invoke-OLEDBQuery does yet, so I'm commenting this out for use as a
 # template at some point in the future.
-# Describe "Ado query with SQLParameter to '$($cp.DataSource)'" -Tag $CommandName, ADO {
-#     # this query uses the ? as a placeholder and not @SomeName because we are using ado and not sqlclient
-#     $Query = 'select * from presidents where lastname = ?'
-#     $Params = @{LastName = "roosevelt" }
-#     $Report = Invoke-AdoQuery @cp -query $Query -SqlParameters $Params
-#     It "should return a result set" {
-#         $Report |
-#             Should -Not -BeNullOrEmpty
-#     }
-# }
+Describe "Ado query with SQLParameter to '$($cp.DataSource)'" -Tag $CommandName, ADO {
+
+    # this query uses the ? as a placeholder and not @SomeName because we are using ado and not sqlclient
+    $Query = 'select * from presidents where lastname = ?'
+    $Params = @{LastName = "roosevelt" }
+
+    It "should return a result set" {
+        Set-ItResult -Skipped -Because "Invoke-AdoQuery does not support parameterized queries at this time."
+
+        $Report = Invoke-AdoQuery @cp -query $Query -SqlParameters $Params
+        $Report | Should -Not -BeNullOrEmpty
+    }
+}
