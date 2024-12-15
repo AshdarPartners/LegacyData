@@ -8,10 +8,6 @@ Import-Module $ManifestFile -DisableNameChecking -Force
 
 $TestConfiguration = Invoke-Expression -Command (Join-Path -Path $PSScriptRoot -ChildPath 'Get-LegacyDataTestValue.ps1')
 
-# We won't be needing any credentials for this set of tests
-# $SqlLoginCredential = (Invoke-Expression -Command (Join-Path -Path $PSScriptRoot -ChildPath 'Get-LegacyDataTestCredential.ps1')).SqlServerUser
-
-
 if ([Environment]::Is64BitProcess) {
     # If this fails, you might try ACE verisons other than 12 like 13, 14, 15, 16 and so forth
     # ACE has 32 bit and 64 bit drivers.

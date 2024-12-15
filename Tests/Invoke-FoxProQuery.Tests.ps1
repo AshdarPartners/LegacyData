@@ -8,9 +8,6 @@ Import-Module $ManifestFile -DisableNameChecking -Force
 
 $TestConfiguration = Invoke-Expression -Command (Join-Path -Path $PSScriptRoot -ChildPath 'Get-LegacyDataTestValue.ps1')
 
-# We won't be needing any credentials for this set of tests
-# $SqlLoginCredential = (Invoke-Expression -Command (Join-Path -Path $PSScriptRoot -ChildPath 'Get-LegacyDataTestCredential.ps1')).SqlServerUser
-
 if ([Environment]::Is64BitProcess) {
     Write-Error "Visual Foxpro drivers only work in 32 bit processes"
 }
