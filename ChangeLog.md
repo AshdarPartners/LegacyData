@@ -20,7 +20,7 @@ and index metadata. I am thinking about what I want to do about Microsoft.Data.S
 
 ### Changed
 
-- Reworked the Pester tests to use a different method for testing. This was prompted by SQL Server (via Docker/Podman) doesn't work like localdb.
+- Reworked the Pester tests to use a different method configuring a credential. This was prompted by SQL Server (via Docker/Podman) doesn't work like localdb.
 
 ## 3.2.0 - 2021-11-14
 
