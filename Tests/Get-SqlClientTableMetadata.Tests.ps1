@@ -6,35 +6,35 @@ $Path = Split-Path -Parent -Path $PSScriptRoot
 $ManifestFile = (Get-ChildItem  -Path $Path -Filter "*.psd1").FullName
 Import-Module $ManifestFile -DisableNameChecking -Force
 
+
 $TestConfiguration = Invoke-Expression -Command (Join-Path -Path $PSScriptRoot -ChildPath 'Get-LegacyDataTestValue.ps1')
-$EncryptedPassword = ConvertTo-SecureString $TestConfiguration.OleDbDbPassword -AsPlainText -Force
-$Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $TestConfiguration.OleDbDbUser, $EncryptedPassword
+
+# 'User' is one of several possible users.
+$EncryptedPassword = ConvertTo-SecureString $TestConfiguration.SqlClientDBPassword -AsPlainText -Force
+$Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $TestConfiguration.SqlClientDbUser, $EncryptedPassword
 
 $cp = @{
-    Provider   = 'sqloledb'
     Credential = $Credential
-    DataSource = $TestConfiguration.OleDbHostName
+    DataSource = $TestConfiguration.SqlClientDbHostName
     # Invoke-OleDbQuery doesn't support a -DatabaseName or -InitialCatalog
     # If we wanted to specify a particular database, we'd have to stuff this in the Extended properties parameter.
     # or we could cheat by using a FROM clause and a three-part name. That would only work with SqlServer.
-    # DataSource = $TestConfiguration.SqlOleDbDatabaseName
+    # DataSource = $TestConfiguration.SqlClientDbDatabaseName
 }
 
-Describe "Get-OleDbIndexMetadata with -datasource to '$($cp.DataSource)'" -Tag $CommandName, DataSource, OLEDB {
+Describe "Get-SqlClientTableMetadata with -datasource to '$($cp.DataSource)'"  -Tag $CommandName, DataSource, SqlClient {
 
-    $Report = Get-OleDbIndexMetadata @cp -TableCatalog 'master'
+    $Report = Get-SqlClientTableMetadata @cp -TableCatalog 'master'
 
     It "should return a result set" {
         $Report |
             Should -Not -BeNullOrEmpty
     }
 }
-
-Describe "Get-OleDbIndexMetadata with -ConnectionString to '$($cp.DataSource)'" -Tag $CommandName, ConnectionString, OLEDB {
-    $builder = New-Object System.Data.OleDb.OleDbConnectionStringBuilder
+Describe "Get-SqlClientTableMetadata with -ConnectionString to '$($cp.DataSource)'" -Tag $CommandName, ConnectionString, SqlClient {
+    $builder = New-Object System.Data.SqlClient.SqlConnectionStringBuilder
     $builder."Data Source" = $cp.DataSource
     $builder."Provider" = $cp.Provider
-
     if ($cp.Credential) {
         $builder["Trusted_Connection"] = $false
         $builder["User ID"] = $cp.Credential.UserName
@@ -44,7 +44,7 @@ Describe "Get-OleDbIndexMetadata with -ConnectionString to '$($cp.DataSource)'" 
         $builder["Trusted_Connection"] = $true
     }
 
-    $Report = Get-OleDbIndexMetadata -TableCatalog 'master' -ConnectionString $builder.ConnectionString
+    $Report = Get-SqlClientTableMetadata -TableCatalog 'master' -ConnectionString $builder.ConnectionString
 
     It "should return a result set" {
         $Report |
@@ -52,11 +52,10 @@ Describe "Get-OleDbIndexMetadata with -ConnectionString to '$($cp.DataSource)'" 
     }
 }
 
-Describe "Get-OleDbIndexMetadata with -Connection to '$($cp.DataSource)'" -Tag $CommandName, Connection, OLEDB {
-    $builder = New-Object System.Data.OleDb.OleDbConnectionStringBuilder
+Describe "Get-SqlClientTableMetadata with -Connection to '$($cp.DataSource)'" -Tag $CommandName, Connection, SqlClient {
+    $builder = New-Object System.Data.SqlClient.SqlConnectionStringBuilder
     $builder."Data Source" = $cp.DataSource
     $builder."Provider" = $cp.Provider
-
     if ($cp.Credential) {
         $builder["Trusted_Connection"] = $false
         $builder["User ID"] = $cp.Credential.UserName
@@ -66,14 +65,13 @@ Describe "Get-OleDbIndexMetadata with -Connection to '$($cp.DataSource)'" -Tag $
         $builder["Trusted_Connection"] = $true
     }
 
-    $Cn = Get-OleDbConnection -ConnectionString $builder.ConnectionString
+    $Cn = Get-SqlClientConnection -ConnectionString $builder.ConnectionString
     It "should return a valid connection" {
         $cn |
             Should -Not -BeNullOrEmpty
     }
 
-    $Report = Get-OleDbIndexMetadata -TableCatalog 'master' -Connection $cn
-
+    $Report = Get-SqlClientTableMetadata -TableCatalog 'master' -Connection $cn
 
     It "should return a result set" {
         $Report |

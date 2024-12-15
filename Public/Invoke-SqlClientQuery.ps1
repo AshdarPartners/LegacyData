@@ -1,11 +1,17 @@
-﻿function Invoke-OleDbQuery {
+﻿function Invoke-SqlClientQuery {
     <#
     .SYNOPSIS
-    Queries an OleDb data source, given an OleDb provider, DataSource and queryOleDbDbUser
+    Queries an SqlClient data source, given a DataSource and queryOleDbDbUser
 
     .DESCRIPTION
-    Queries an OleDb data source, given an OleDb provider, DataSource and queryOleDbDbUser
+    Queries an SqlClient data source, given an SqlClient provider, DataSource and queryOleDbDbUser
     www.connectionstrings.com is an excellent resource for connection strings for specific drivers.
+
+    .NOTES
+    I debated providing this "Invoke-SqlClientQuery" cmdlet because DbaTools\Invoke-DbaQuery, Invoke-Sqlcmd and Invoke-Sqlcmd2
+    are all more feature-ful than anything I could reasonably provide _and_ you can always get to SQL Server data by using
+    Invoke-OleDbQuery and providing an appropriate value for the driver. BUT...this feels more complete and it helps preserve and
+    extend the "layered" approach I follow when using this PowerShell module.
 
     .OUTPUTS
     DataSet, DataTable, DataRow, SingleValue or None. This is controlled by the -As parameter.
@@ -19,9 +25,6 @@
     .PARAMETER DataSource
     This highly dependant on the provider to be used. For MDB, DBF, EXCEL, etc, it's a file path. For RDBMS like SQL Server or MySQL, it will be a server hostname. Other variations are possible.
 
-    .PARAMETER Provider
-    Which OleDb provider should be used?
-
     .PARAMETER ExtendedProperties
     Some providers use a bevy of 'extended properties' in the connection string, this is a bucket into which you can throw them.
     The exact capability and syntax is provider-specific.
@@ -31,7 +34,7 @@
     .PARAMETER CommandText
     A/K/A "Query". What query should be run against the source? At it's simplest, this allows you to specify the table of interest and a specific list of columns. You can use "select *" if you want to. You can also join in the source, provide WHERE clauses, etc.
     For parameterized queries:
-        1. Use ? as a placeholder and NOT @SomeName (which is SqlClient-specific and doesn't work with OleDb.)
+        1. Use ? as a placeholder and NOT @SomeName (which is SqlClient-specific and doesn't work with SqlClient.)
         2. Do not need to specify quotes when providing a parameterizing: "select * from dept where deptname = ?", not "select * from dept where deptname = '?'"
 
     .PARAMETER CommandTimeout
@@ -52,23 +55,14 @@
     Use alternative credentials. Accepts credential objects provided by Get-Credential.
 
     .EXAMPLE
-    Invoke-OleDbQuery -provider:"vfpoledb" -DataSource:'c:\temp\ADOLoad' -query:"Select count(*) CountOf from UNIT"
-    This reads a Visual Fox Pro table, which is similar to dBase, xBase, etc, using the Visual FoxPro OleDb driver.
-
-    .EXAMPLE
-    Invoke-OleDbQuery -provider:"Microsoft.ACE.OLEDB.12.0" -DataSource:'c:\temp\ADOLoad' -query:"Select count(*) CountOf from UNIT" -ExtendedProperties:"dBASE IV;User ID=Admin;"
-    This reads a Visual Fox Pro table, which is similar to dBase, xBase, etc, using "ACE", which are the drivers that come with Office 2007 and later.
-    Watch out for the version numbers, they change with each version of Office.
-
-    .EXAMPLE
-    Invoke-OleDbQuery -DataSource 'hal9000' -Provider 'sqloledb' -ExtendedProperties "Trusted_Connection=Yes" -query 'select getdate() RightNow'
+    Invoke-SqlClientQuery -DataSource 'hal9000' -ExtendedProperties "Trusted_Connection=Yes" -query 'select getdate() RightNow'
     This reads a SQL Server database.
 
     .EXAMPLE
     $Query = "select getdate() RightNow where getdate() > ? "
     $Params = @{WasThen = "1/1/1980"}
-    $Report = Invoke-OLEDBQuery -DataSource $DataSource -Provider 'sqloledb' -ExtendedProperties "Trusted_Connection=Yes" -query $Query -SqlParameters $params
-    This shows a parameterized query. This query uses the ? as a placeholder and not @SomeName because we are using oledb and not sqlclient.
+    $Report = Invoke-SqlClientQuery -DataSource $DataSource -ExtendedProperties "Trusted_Connection=Yes" -query $Query -SqlParameters $params
+    This shows a parameterized query. This query uses the ? as a placeholder and not @SomeName becuase we are using SqlClient and not sqlclient.
 
     .LINK
     http://stackoverflow.com/questions/10149910/use-powershell-to-save-a-datatable-as-a-csv
@@ -87,7 +81,7 @@
             ParameterSetName = 'WithConnection',
             Mandatory = $true
         )]
-        [System.Data.OleDb.OleDbConnection] $Connection,
+        [System.Data.SqlClient.SqlConnection] $Connection,
 
         [Parameter(
             ParameterSetName = 'WithDataSource',
@@ -96,10 +90,9 @@
         [string] $DataSource,
 
         [Parameter(
-            ParameterSetName = 'WithDataSource',
-            Mandatory = $true
+            ParameterSetName = 'WithDataSource'
         )]
-        [string] $Provider,
+        [string] $DatabaseName = 'master',
 
         [Parameter(
             ParameterSetName = 'WithDataSource'
@@ -139,18 +132,18 @@
         # If we were handed a connection, use it. If we were not, create one.
         switch ($PSCmdlet.ParameterSetName) {
             'WithConnection' {
-                $OleDbConn = $Connection
+                $SqlClientConn = $Connection
             }
             'WithConnectionString' {
-                $OleDbConn = Get-OleDbConnection -ConnectionString $ConnectionString
+                $SqlClientConn = Get-SqlClientConnection -ConnectionString $ConnectionString
             }
             'WithDataSource' {
-                $OleDbConn = Get-OleDbConnection -DataSource $DataSource -ExtendedProperties $ExtendedProperties -Provider $Provider -Credential $Credential
+                $SqlClientConn = Get-SqlClientConnection -DataSource $DataSource -ExtendedProperties $ExtendedProperties -Credential $Credential -DatabaseName $DatabaseName
             }
         }
 
-        $command = New-Object System.Data.OleDb.OleDbCommand
-        $command.Connection = $OleDbConn
+        $command = New-Object System.Data.SqlClient.SqlCommand
+        $command.Connection = $SqlClientConn
         $command.CommandTimeout = $CommandTimeout
         $command.CommandText = $CommandText
 
@@ -178,7 +171,7 @@
             }
             default {
                 $ds = New-Object System.Data.DataSet
-                $da = New-Object system.Data.OleDb.OleDbDataAdapter($command)
+                $da = New-Object system.Data.SqlClient.SqlDataAdapter($command)
                 # "$Null = " is alledged to be slighlty faster than " | Out-Null", in most cases
                 $Null = $da.Fill($ds)
             }
@@ -220,9 +213,9 @@
     Finally {
         # if we were passed a connection, do not close it. Closing it is the responsibility of the caller.
         if ($PSCmdlet.ParameterSetName -ne 'WithConnection') {
-            if ($OleDbConn) {
-                $OleDbConn.Close()
-                $OleDbConn.Dispose()
+            if ($SqlClientConn) {
+                $SqlClientConn.Close()
+                $SqlClientConn.Dispose()
             }
         }
     }

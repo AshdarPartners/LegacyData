@@ -33,14 +33,57 @@ if (-not $ConfigurationFilePath) {
 $TestConfiguration = Get-Content -Path $ConfigurationFilePath -Raw |
     ConvertFrom-Json
 
-if ($env:LegacyDataSqlInstanceName) {
-    $TestConfiguration.SqlOleDbHostName = $env:LegacyDataSqlInstanceName
+#region Allow override of OleDB values
+if ($env:LegacyDataOleDBInstanceName) {
+    $TestConfiguration.OleDbOleDbHostName = $env:LegacyDataOleDbInstanceName
 }
 
-if ($env:LegacyDataSqlDatabaseName) {
-    $TestConfiguration.SqlOleDbDatabaseName = $env:LegacyDataSqlDatabaseName
+if ($env:LegacyDataOleDbDatabaseName) {
+    $TestConfiguration.OleDbOleDbDatabaseName = $env:LegacyDataOleDbDatabaseName
 }
+
+if ($env:LegacyDataOleDBUser) {
+    $TestConfiguration.OleDBOleDbUser = $env:LegacyDataOleDBUser
+}
+
+if ($env:LegacyDataOleDbPassword) {
+    $TestConfiguration.OleDbDbPassword = $env:LegacyDataOleDbDbPassword
+}
+
+# $EncryptedPassword = ConvertTo-SecureString $TestConfiguration.OleDbPassword -AsPlainText -Force
+# $TestConfiguration.LegacyDataOleDbCredential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $TestConfiguration.OleDbUser, $EncryptedPassword
+
+#endregion
+
+#region Allow override of SqlClient values
+if ($env:LegacyDataSqlClientInstanceName) {
+    $TestConfiguration.SqlClientDbHostName = $env:LegacyDataSqlClientInstanceName
+}
+
+if ($env:LegacyDataSqlClientDatabaseName) {
+    $TestConfiguration.SqlClientDbDatabaseName = $env:LegacyDataSqlClientDatabaseName
+}
+
+if ($env:LegacyDataSqlClientDBUser) {
+    $TestConfiguration.SqlClientDBUser = $env:LegacyDataSqlClientDBUser
+}
+
+if ($env:LegacyDataSqlClientDBPassword) {
+    $TestConfiguration.SqlClientDBPassword = $env:LegacyDataSqlClientDBPassword
+}
+
+#endregion
+
+# $PasswordFilePath = "~\OneDrive - Ashdar Partners\Active Projects\LegacyData-Helper\Docker\sapassword.env"
+# $Env:SA_PASSWORD = (Get-Content $PasswordFilePath).Replace('SA_PASSWORD=','')
+
+# # set up the credential
+# $password = ConvertTo-SecureString $Env:SA_PASSWORD -AsPlainText -Force
+# $SqlCredential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "sa", $password
+
+
 
 Write-Verbose -Message "Read Test values from '$ConfigurationFilePath'"
 
 $TestConfiguration
+

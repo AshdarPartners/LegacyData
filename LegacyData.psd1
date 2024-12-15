@@ -12,7 +12,7 @@
     RootModule        = 'LegacyData'
 
     # Version number of this module.
-    ModuleVersion     = '3.2.0'
+    ModuleVersion     = '3.3.0'
 
     # ID used to uniquely identify this module
     GUID              = '779f9757-c463-4737-b0f2-1c589cb97396'
@@ -65,6 +65,13 @@
         # support for ODBC
         'Invoke-ExcelQuery',
         'Invoke-OdbcQuery',
+
+        # support for System.Data.SqlClient (from .NET Framework and .NET )
+        'Get-SqlClientConnection',
+        'Invoke-SqlClientQuery',
+        'Get-SqlClientColumnMetadata',
+        'Get-SqlClientIndexMetadata',
+        'Get-SqlClientTableMetadata',
 
         # Miscellaneous
         'Get-InstalledDatabaseDriverList'

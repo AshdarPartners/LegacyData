@@ -1,13 +1,13 @@
-function Get-OleDbConnection {
+function Get-SqlClientConnection {
     <#
     .SYNOPSIS
-    Returns a connection to an OleDbSource
+    Returns a connection to an SqlClientSource
 
     .DESCRIPTION
-    Returns a connection to an OleDbSource
+    Returns a connection to an SqlClientSource
 
     .OUTPUTS
-    [System.Data.OleDb.OleDbConnection]
+    [System.Data.SqlClient.SqlConnection]
 
     .PARAMETER DataSource
     This highly dependant on the provider to be used. For MDB, DBF, EXCEL, etc, it's a file path. For RDBMS like SQL Server or MySQL, it will be a server hostname. Other variations are possible.
@@ -15,8 +15,12 @@ function Get-OleDbConnection {
     .PARAMETER ConnectionString
     If the caller provides a connection string, it will be used instead of the datasource
 
-    .PARAMETER Provider
-    Which OleDb provider should be used?
+    .PARAMETER DatabaseName
+    What is the name of the database of interest? If none is provided, the connection will be made to whatever the default database
+    is set to for this particular user. 99.999% of the time, this will be 'master'.
+
+    .PARAMETER ApplicationName
+    What is the name that should be provided to SQL Server?
 
     .PARAMETER ExtendedProperties
     Some providers use a bevy of 'extended properties' in the connection string, this is a bucket into which you can throw them.
@@ -29,7 +33,7 @@ function Get-OleDbConnection {
 
     .EXAMPLE
     try {
-        $cn = Get-OleDbConnection -DataSource 'c:\fpdata' -Provider 'vfpoledb'
+        $cn = Get-SqlClientConnection -DataSource 'localhost'
         # do stuff
     }
     catch {
@@ -47,7 +51,7 @@ function Get-OleDbConnection {
     https://www.connectionstrings.com/
 
     #>
-    [OutputType([System.Data.OleDb.OleDbConnection])]
+    [OutputType([System.Data.SqlClient.SqlConnection])]
     param (
         [Parameter(
             ParameterSetName = 'WithConnectionString',
@@ -55,6 +59,7 @@ function Get-OleDbConnection {
         )]
         [string] $ConnectionString,
 
+        [Alias ('SqlInstance','Server', 'SqlServer')]
         [Parameter(
             ParameterSetName = 'WithDataSource',
             Mandatory = $true
@@ -62,15 +67,19 @@ function Get-OleDbConnection {
         [string] $DataSource,
 
         [Parameter(
-            ParameterSetName = 'WithDataSource',
-            Mandatory = $true
+            ParameterSetName = 'WithDataSource'
         )]
-        [string] $Provider,
+        [string] $ExtendedProperties,
 
         [Parameter(
             ParameterSetName = 'WithDataSource'
         )]
-        [string] $ExtendedProperties,
+        [string] $DatabaseName,
+
+        [Parameter(
+            ParameterSetName = 'WithDataSource'
+        )]
+        [string] $ApplicationName,
 
         [Parameter(
             ParameterSetName = 'WithDataSource'
@@ -83,9 +92,8 @@ function Get-OleDbConnection {
             [string] $connString = $ConnectionString
         }
         'WithDataSource' {
-            $builder = New-Object System.Data.OleDb.OleDbConnectionStringBuilder
+            $builder = New-Object System.Data.SqlClient.SqlConnectionStringBuilder
             $builder."Data Source" = $DataSource
-            $builder."Provider" = $Provider
 
             if ($ExtendedProperties) {
                 $builder."Extended Properties" = $ExtendedProperties
@@ -98,14 +106,22 @@ function Get-OleDbConnection {
                 $builder["Trusted_Connection"] = $true
             }
 
+            if ($DatabaseName) {
+                $builder["Database"] = $DatabaseName
+            }
+
+            if ($ApplicationName) {
+                $builder["Application Name"] = $ApplicationName
+            }
+
             [string] $connString = $builder.ConnectionString
         }
     }
 
     Try {
-        $OleDbConn = New-Object System.Data.OleDb.OleDbConnection($connString)
-        $OleDbConn.Open()
-        $OleDbConn
+        $SqlClientConn = New-Object System.Data.SqlClient.SqlConnection($connString)
+        $SqlClientConn.Open()
+        $SqlClientConn
     }
 
     Catch {
