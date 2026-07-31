@@ -20,6 +20,7 @@ I am leaving the pre-3.0.0 changes here in this changelog for archaeological rea
 
 - Clean up some environmental issues with the tests. Moved from Docker to Podman.
 - Bump the version number
+- Normalize file encodings to UTF-8 without BOM. Several Public\*.ps1 files were UTF-16 LE, which made them awkward to diff and edit.
 
 ## 3.2.0 - 2021-11-14
 

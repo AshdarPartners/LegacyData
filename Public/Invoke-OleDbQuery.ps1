@@ -1,4 +1,4 @@
-﻿function Invoke-OleDbQuery {
+function Invoke-OleDbQuery {
     <#
     .SYNOPSIS
     Queries an OleDb data source, given an OleDb provider, DataSource and query. Returns a DataTable
